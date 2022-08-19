@@ -1,0 +1,64 @@
+---
+title: "Mariner: Explore the Hi-C's"
+subtitle: "BCB Student Seminar"
+author: "Eric Davis <br> Phanstiel Lab"
+date: "09-01-2022"
+auto-stretch: true
+format: 
+  revealjs:
+      theme: css/custom.scss
+      slide-number: true
+      logo: images/bcb_logo.png
+      footer: <https://github.com/EricSDavis/mariner>
+editor: source
+
+# :::
+# title-slide-attributes:
+#   data-background-image: "images/mariner_no_text_cropped.png"
+#   data-background-opacity: "1"
+# :::
+---
+
+## Outline
+::: columns
+
+::: {.column width="50%"}
+-   Background
+-   Why make this?
+-   Plan
+-   Examples
+:::
+
+::: {.column width="50%"}
+![](images/mariner.png)
+:::
+
+:::
+
+## Mariner functionality {.smallHeading}
+
+::: columns
+
+::: {.column width="50%"}
+### Manipulating/Merging Anchors
+- binning
+- shifting
+- filtering
+- clustering
+- merging
+:::
+
+::: {.column width="50%"}
+### Extracting/Aggregating Interactions
+:::
+
+
+::: {.column width="50%"}
+### Generating Pairs from Ranges
+:::
+
+::: {.column width="50%"}
+### Visualization
+:::
+
+:::
