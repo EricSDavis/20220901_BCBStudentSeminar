@@ -28,6 +28,8 @@
   <link href="mariner_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="mariner_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="mariner_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="mariner_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="mariner_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="mariner_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
 
@@ -320,8 +322,8 @@
 
 <section id="title-slide" class="center">
   <h1 class="title">Mariner: Explore the Hi-C’s</h1>
-  <p class="subtitle">BCB Student Seminar</p>
   <p class="author">Eric Davis <br> Phanstiel Lab</p>
+  <p class="institute">BCB Student Seminar</p>
   <p class="date">09-01-2022</p>
 </section>
 
@@ -339,6 +341,64 @@
 <p><img data-src="images/mariner.png"></p>
 </div>
 </div>
+<!-- Existing software -->
+</section>
+<section>
+<section id="existing-software-for-working-with-hi-c-data" class="title-slide slide level1 center">
+<h1>Existing software for working with Hi-C data</h1>
+
+</section>
+<section id="section" class="slide level2 center middle">
+<h2></h2>
+<h3 id="extracting-hi-c-data">Extracting Hi-C Data</h3>
+<div class="fragment">
+<p><a href="https://github.com/aidenlab/juicer">Juicer tools</a></p>
+</div>
+<div class="fragment">
+<p><a href="https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/s12859-022-04589-y.pdf">HiCmapTools</a></p>
+</div>
+</section>
+<section id="section-1" class="slide level2 center middle">
+<h2></h2>
+<h3 id="aggregating-hi-c-interactions">Aggregating Hi-C Interactions</h3>
+<div class="fragment">
+<p><a href="https://github.com/aidenlab/juicer">Juicer tools</a></p>
+</div>
+<div class="fragment">
+<p><a href="https://github.com/open2c/coolpuppy">coolpup.py</a></p>
+</div>
+</section>
+<section id="section-2" class="slide level2 center middle">
+<h2></h2>
+<h3 id="visualizing-hi-c-data">Visualizing Hi-C Data</h3>
+<div class="fragment">
+<p><a href="https://aidenlab.org/juicebox/">Juice Box</a></p>
+</div>
+<div class="fragment">
+<p><a href="http://higlass.io/">HiGlass</a></p>
+<!-- Why do we need this? -->
+</div>
+</section>
+<section id="why-do-we-need-this" class="slide level2">
+<h2>Why do we need this?</h2>
+<p><img data-src="https://imgs.xkcd.com/comics/standards.png" class="absolute" style="top: 15%; left: 15%; width: 70%; "></p>
+</section>
+<section id="why-do-we-need-this-1" class="slide level2">
+<h2>Why do we need this?</h2>
+<ul>
+<li>Hi-C tools are <strong>dispersed</strong> across programming languages/environments</li>
+</ul>
+<div class="fragment">
+<p><img data-src="images/terminal.png" class="absolute" style="left: 0%; width: 200px; "> <img data-src="images/RLogo.webp" class="absolute" style="left: 25%; width: 200px; "> <img data-src="images/pythonLogo.webp" class="absolute" style="left: 50%; width: 200px; "> <img data-src="images/ai.png" class="absolute" style="left: 75%; width: 200px; "></p>
+</div>
+</section>
+<section id="bioconductor-environment" class="slide level2">
+<h2>Bioconductor environment</h2>
+<p><img data-src="images/bioclogo.png" class="absolute" style="top: 0px; right: 0px; width: 150px; "></p>
+<ul>
+<li>Keep all analyses in R</li>
+<li>Classes for working with genomic data</li>
+</ul>
 </section>
 <section id="mariner-functionality" class="slide level2 smallHeading">
 <h2>Mariner functionality</h2>
@@ -364,7 +424,7 @@
 <img src="images/bcb_logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
 <p><a href="https://github.com/EricSDavis/mariner" class="uri">https://github.com/EricSDavis/mariner</a></p>
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
@@ -375,6 +435,7 @@
   <script src="mariner_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="mariner_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="mariner_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="mariner_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="mariner_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -396,7 +457,8 @@
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -567,7 +629,7 @@
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
 
           RevealMath,
           RevealNotes,
