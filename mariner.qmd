@@ -26,6 +26,16 @@ chalkboard: true
   <h1>Mariner</h1>
 <div>
 
+::: {.subheader .absolute left=40% top=65%}
+BCB Student Seminar
+
+Eric Davis
+
+Phanstiel Lab
+
+09/01/2022
+:::
+
 ## {auto-animate=true}
 
 <div class="header">
@@ -34,28 +44,22 @@ chalkboard: true
   <h4>"Explore the Hi-C's"</h4>
 <div>
 
+::: {.subheader .absolute left=40% top=65%}
+BCB Student Seminar
 
-## Outline
+Eric Davis
 
-::: columns
-::: {.column width="50%"}
--   Background
--   Why make this?
--   Plan
--   Examples
+Phanstiel Lab
+
+09/01/2022
 :::
 
-::: {.column width="50%"}
-![](images/mariner.png)
-:::
-:::
 
 <!-- Why do we need this? -->
 
 ## Why do we need this?
 
 ![](https://imgs.xkcd.com/comics/standards.png){.absolute width=70% top=15% left=15%}
-
 
 
 <!-- Table Existing software -->
