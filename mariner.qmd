@@ -108,6 +108,11 @@ chalkboard: true
 ## Genomic ranges
 library(GenomicRanges)
 GRanges("chr1:1-10000")
+
+## Alternate method
+GRanges(seqnames = c("chr1", "chr2"),
+        ranges = IRanges(start = c(1, 30000),
+                         end = c(10000, 60000)))
 ```
 
 . . . 
@@ -118,6 +123,8 @@ library(GenomicRanges)
 GRanges("chr1:1-10000")
 ```
 
+. . .
+
 ## Bioconductor environment {auto-animate=true}
 
 ![](images/bioclogo.png){.absolute width="150px" top=0 right=0}
@@ -127,10 +134,49 @@ GRanges("chr1:1-10000")
 - Classes for working with genomic data
 :::
 
-```{.r code-line-numbers="|7-8"}
+```{.r code-line-numbers="6-9"}
 ## Genomic ranges
 library(GenomicRanges)
 GRanges("chr1:1-10000")
+
+## Alternate method
+GRanges(seqnames = c("chr1", "chr2"),
+        ranges = IRanges(start = c(1, 30000),
+                         end = c(10000, 60000)))
+```
+
+. . .
+
+```{r}
+## Alternate method
+GRanges(seqnames = c("chr1", "chr2"),
+        ranges = IRanges(start = c(1, 30000),
+                         end = c(10000, 60000)))
+```
+
+. . .
+
+## Bioconductor environment {auto-animate=true}
+
+::: footer
+:::
+
+![](images/bioclogo.png){.absolute width="150px" top=0 right=0}
+
+::: {.nonincremental}
+- Keep all analyses in R
+- Classes for working with genomic data
+:::
+
+```{.r code-line-numbers="6-9|12-13"}
+## Genomic ranges
+library(GenomicRanges)
+GRanges("chr1:1-10000")
+
+## Alternate method
+GRanges(seqnames = c("chr1", "chr2"),
+        ranges = IRanges(start = c(1, 30000),
+                         end = c(10000, 60000)))
 
 ## Genomic interactions
 library(InteractionSet)
@@ -146,6 +192,7 @@ library(InteractionSet)
 GInteractions(anchor1 = GRanges("chr1:1-10000"),
               anchor2 = GRanges("chr1:1-10000"))
 ```
+
 
 ## Mariner functionality {.smallHeading}
 
