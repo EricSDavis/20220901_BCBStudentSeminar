@@ -405,57 +405,286 @@
 <p><img data-src="images/mariner.png"></p>
 </div>
 </div>
-<!-- Existing software -->
-</section>
-<section>
-<section id="existing-software-for-working-with-hi-c-data" class="title-slide slide level1 center">
-<h1>Existing software for working with Hi-C data</h1>
-
-</section>
-<section id="section" class="slide level2 center middle">
-<h2></h2>
-<h3 id="extracting-hi-c-data">Extracting Hi-C Data</h3>
-<div class="fragment">
-<p><a href="https://github.com/aidenlab/juicer">Juicer tools</a></p>
-</div>
-<div class="fragment">
-<p><a href="https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/s12859-022-04589-y.pdf">HiCmapTools</a></p>
-</div>
-</section>
-<section id="section-1" class="slide level2 center middle">
-<h2></h2>
-<h3 id="aggregating-hi-c-interactions">Aggregating Hi-C Interactions</h3>
-<div class="fragment">
-<p><a href="https://github.com/aidenlab/juicer">Juicer tools</a></p>
-</div>
-<div class="fragment">
-<p><a href="https://github.com/open2c/coolpuppy">coolpup.py</a></p>
-</div>
-</section>
-<section id="section-2" class="slide level2 center middle">
-<h2></h2>
-<h3 id="visualizing-hi-c-data">Visualizing Hi-C Data</h3>
-<div class="fragment">
-<p><a href="https://aidenlab.org/juicebox/">Juice Box</a></p>
-</div>
-<div class="fragment">
-<p><a href="http://higlass.io/">HiGlass</a></p>
 <!-- Why do we need this? -->
-</div>
 </section>
 <section id="why-do-we-need-this" class="slide level2">
 <h2>Why do we need this?</h2>
 <p><img data-src="https://imgs.xkcd.com/comics/standards.png" class="absolute" style="top: 15%; left: 15%; width: 70%; "></p>
+
+<!-- Table Existing software -->
 </section>
-<section id="why-do-we-need-this-1" class="slide level2">
+<section id="why-do-we-need-this-1" class="slide level2 smaller">
 <h2>Why do we need this?</h2>
+
+<table class="tg">
+<thead>
+<tr>
+<th class="tg-nrix" rowspan="2">
+Software
+</th>
+<th class="tg-nrix" rowspan="2">
+Language
+</th>
+<th class="tg-nrix" colspan="3">
+Extracting
+</th>
+<th class="tg-nrix" colspan="3">
+Aggregating
+</th>
+<th class="tg-nrix" rowspan="2">
+Range Operations
+</th>
+<th class="tg-nrix" rowspan="2">
+Differential Analysis
+</th>
+<th class="tg-nrix" rowspan="2">
+Visualization
+</th>
+</tr>
+<tr>
+<th class="tg-57iy">
+Pixels
+</th>
+<th class="tg-57iy">
+Matrices
+</th>
+<th class="tg-57iy">
+Custom
+</th>
+<th class="tg-57iy">
+Matrices
+</th>
+<th class="tg-57iy">
+TADs/Stripes
+</th>
+<th class="tg-57iy">
+Custom
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tg-nrix">
+<a href="https://github.com/aidenlab/juicer">Juicer tools</a>
+</td>
+<td class="tg-nrix">
+<img data-src="images/terminal.png" width="25"> <img data-src="images/javalogo.svg" width="25">
+</td>
+<td class="tg-nrix">
+✅
+</td>
+<td class="tg-nrix">
+✅
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+✅
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+</tr>
+<tr>
+<td class="tg-57iy">
+<a href="https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/s12859-022-04589-y.pdf">HiCmapTools</a>
+</td>
+<td class="tg-57iy">
+<img data-src="images/terminal.png" width="25">
+</td>
+<td class="tg-57iy">
+✅
+</td>
+<td class="tg-57iy">
+✅
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+✅
+</td>
+<td class="tg-57iy">
+✅
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+⚠️
+</td>
+</tr>
+<tr>
+<td class="tg-nrix">
+<a href="https://github.com/open2c/coolpuppy">coolpup.py</a>
+</td>
+<td class="tg-nrix">
+<img data-src="images/pythonLogo.webp" width="25">
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+✅
+</td>
+<td class="tg-nrix">
+✅
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+⚠️
+</td>
+</tr>
+<tr>
+<td class="tg-57iy">
+<a href="https://aidenlab.org/juicebox/">Juice Box</a>
+</td>
+<td class="tg-57iy">
+<img data-src="images/chrome.png" width="25">
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+✅
+</td>
+</tr>
+<tr>
+<td class="tg-nrix">
+<a href="http://higlass.io/">HiGlass</a>
+</td>
+<td class="tg-nrix">
+<img data-src="images/chrome.png" width="25">
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+❌
+</td>
+<td class="tg-nrix">
+✅
+</td>
+</tr>
+<tr>
+<td class="tg-57iy">
+<a href="https://bedtools.readthedocs.io/en/latest/">Bedtools</a>
+</td>
+<td class="tg-57iy">
+<img data-src="images/terminal.png" width="25"> <img data-src="images/RLogo.webp" width="25">
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+✅
+</td>
+<td class="tg-57iy">
+❌
+</td>
+<td class="tg-57iy">
+❌
+</td>
+</tr>
+</tbody>
+
+</table>
 <ul>
-<li class="fragment">Hi-C tools are <strong>dispersed</strong> across programming languages/environments</li>
+<li class="fragment"><p>Hi-C tools are <strong>dispersed</strong> across programming languages/environments.</p>
+<ul>
+<li class="fragment">Steep learning curve</li>
+<li class="fragment">Difficult to create reproducible workflow.</li>
+</ul></li>
+<li class="fragment"><p>Some functionality is either impossible or impractical.</p></li>
 </ul>
-<div class="fragment">
-<p><img data-src="images/terminal.png" class="absolute" style="left: 0%; width: 200px; "> <img data-src="images/RLogo.webp" class="absolute" style="left: 25%; width: 200px; "> <img data-src="images/pythonLogo.webp" class="absolute" style="left: 50%; width: 200px; "> <img data-src="images/ai.png" class="absolute" style="left: 75%; width: 200px; "></p>
 <!-- Bioconductor environment -->
-</div>
 </section>
 <section id="bioconductor-environment" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Bioconductor environment</h2>
@@ -581,7 +810,7 @@
 <img src="images/bcb_logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
 <p><a href="https://github.com/EricSDavis/mariner" class="uri">https://github.com/EricSDavis/mariner</a></p>
 </div>
-</section></section>
+</section>
     </div>
   </div>
 
@@ -741,7 +970,7 @@
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'none',
+        transition: 'slide',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',

@@ -6,6 +6,7 @@ date: "09-01-2022"
 format:
   revealjs:
     incremental: true
+    transition: slide
     theme: css/custom.scss
     slide-number: true
     logo: images/bcb_logo.png
@@ -33,47 +34,6 @@ chalkboard: true
 :::
 :::
 
-<!-- Existing software -->
-
-# Existing software for working with Hi-C data 
-
-## {.center .middle}
-
-### Extracting Hi-C Data
-
-. . .
-
-[Juicer tools](https://github.com/aidenlab/juicer)
-
-. . .
-
-[HiCmapTools](https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/s12859-022-04589-y.pdf)
-
-## {.center .middle}
-
-### Aggregating Hi-C Interactions
-
-. . .
-
-[Juicer tools](https://github.com/aidenlab/juicer)
-
-. . . 
-
-[coolpup.py](https://github.com/open2c/coolpuppy)
-
-## {.center .middle}
-
-### Visualizing Hi-C Data
-
-. . .
-
-[Juice Box](https://aidenlab.org/juicebox/)
-
-. . . 
-
-[HiGlass](http://higlass.io/)
-
-
 <!-- Why do we need this? -->
 
 ## Why do we need this?
@@ -81,17 +41,134 @@ chalkboard: true
 ![](https://imgs.xkcd.com/comics/standards.png){.absolute width=70% top=15% left=15%}
 
 
-## Why do we need this?
+
+<!-- Table Existing software -->
+
+## Why do we need this? {.smaller}
+
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-nrix" rowspan="2">Software</th>
+    <th class="tg-nrix" rowspan="2">Language</th>
+    <th class="tg-nrix" colspan="3">Extracting</th>
+    <th class="tg-nrix" colspan="3">Aggregating</th>
+    <th class="tg-nrix" rowspan="2">Range Operations</th>
+    <th class="tg-nrix" rowspan="2">Differential Analysis</th>
+    <th class="tg-nrix" rowspan="2">Visualization</th>
+  </tr>
+  <tr>
+    <th class="tg-57iy">Pixels</th>
+    <th class="tg-57iy">Matrices</th>
+    <th class="tg-57iy">Custom</th>
+    <th class="tg-57iy">Matrices</th>
+    <th class="tg-57iy">TADs/Stripes</th>
+    <th class="tg-57iy">Custom</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-nrix">[Juicer tools](https://github.com/aidenlab/juicer)</td>
+    <td class="tg-nrix">
+      ![](images/terminal.png){width=25px}
+      ![](images/javalogo.svg){width=25px}
+    </td>
+    <td class="tg-nrix">✅</td>
+    <td class="tg-nrix">✅</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">✅</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+  </tr>
+  <tr>
+    <td class="tg-57iy">
+      [HiCmapTools](https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/s12859-022-04589-y.pdf)
+    </td>
+    <td class="tg-57iy">![](images/terminal.png){width=25px}</td>
+    <td class="tg-57iy">✅</td>
+    <td class="tg-57iy">✅</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">✅</td>
+    <td class="tg-57iy">✅</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">⚠️</td>
+  </tr>
+  <tr>
+    <td class="tg-nrix">[coolpup.py](https://github.com/open2c/coolpuppy)</td>
+    <td class="tg-nrix">![](images/pythonLogo.webp){width=25px}</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">✅</td>
+    <td class="tg-nrix">✅</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">⚠️</td>
+  </tr>
+  <tr>
+    <td class="tg-57iy">[Juice Box](https://aidenlab.org/juicebox/)</td>
+    <td class="tg-57iy">![](images/chrome.png){width=25px}</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">✅</td>
+  </tr>
+  <tr>
+    <td class="tg-nrix">[HiGlass](http://higlass.io/)</td>
+    <td class="tg-nrix">![](images/chrome.png){width=25px}</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">❌</td>
+    <td class="tg-nrix">✅</td>
+  </tr>
+  <tr>
+    <td class="tg-57iy">
+      [Bedtools](https://bedtools.readthedocs.io/en/latest/)
+    </td>
+    <td class="tg-57iy">
+      ![](images/terminal.png){width=25px}
+      ![](images/RLogo.webp){width=25px}
+    </td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">✅</td>
+    <td class="tg-57iy">❌</td>
+    <td class="tg-57iy">❌</td>
+  </tr>
+</tbody>
+</table>
+
 
 - Hi-C tools are **dispersed** across
-  programming languages/environments
+  programming languages/environments.
   
-. . .
+  - Steep learning curve
+  - Difficult to create reproducible
+    workflow.
 
-![](images/terminal.png){.absolute width=200px left=0%}
-![](images/RLogo.webp){.absolute width=200px left=25%}
-![](images/pythonLogo.webp){.absolute width=200px left=50%}
-![](images/ai.png){.absolute width=200px left=75%}
+- Some functionality is either
+  impossible or impractical.
+
 
 <!-- Bioconductor environment -->
 
