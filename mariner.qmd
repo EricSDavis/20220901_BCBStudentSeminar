@@ -1,12 +1,12 @@
 ---
-title: "Mariner: Explore the Hi-C's"
-institute: "BCB Student Seminar"
-author: "Eric Davis <br> Phanstiel Lab"
-date: "09-01-2022"
+# title: "Mariner: Explore the Hi-C's"
+# institute: "BCB Student Seminar"
+# author: "Eric Davis <br> Phanstiel Lab"
+# date: "09-01-2022"
 format:
   revealjs:
     incremental: true
-    transition: slide
+    transition: none
     theme: css/custom.scss
     slide-number: true
     logo: images/bcb_logo.png
@@ -18,6 +18,22 @@ chalkboard: true
 #   data-background-image: "images/mariner_no_text_cropped.png"
 #   data-background-opacity: "1"
 ---
+
+## {auto-animate=true}
+
+<div class="header">
+  <img src="images/mariner_no_text_cropped.png" />
+  <h1>Mariner</h1>
+<div>
+
+## {auto-animate=true}
+
+<div class="header">
+  <img src="images/mariner_no_text_cropped.png" />
+  <h1 style="top:0px; margin-bottom:0px;">Mariner</h1>
+  <h4>"Explore the Hi-C's"</h4>
+<div>
+
 
 ## Outline
 
