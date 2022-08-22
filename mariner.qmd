@@ -5,6 +5,7 @@ author: "Eric Davis <br> Phanstiel Lab"
 date: "09-01-2022"
 format:
   revealjs:
+    incremental: true
     theme: css/custom.scss
     slide-number: true
     logo: images/bcb_logo.png
@@ -95,12 +96,60 @@ chalkboard: true
 
 ## Bioconductor environment
 
-![](images/bioclogo.png){.absolute width="150px" top="0" right="0"}
+![](images/bioclogo.png){.absolute width="150px" top=0 right=0}
 
--   Keep all analyses in R
--   Classes for working with genomic data
+- Keep all analyses in R
+- Classes for working with genomic data
 
+. . . 
 
+```{.r code-line-numbers="|3"}
+## Genomic ranges
+library(GenomicRanges)
+GRanges("chr1:1-10000")
+
+## Genomic interactions
+library(InteractionSet)
+GInteractions(anchor1 = GRanges("chr1:1-10000"),
+              anchor2 = GRanges("chr1:1-10000"))
+```
+
+. . . 
+
+```{r}
+## Genomic ranges
+library(GenomicRanges)
+GRanges("chr1:1-10000")
+```
+
+## Bioconductor environment
+
+![](images/bioclogo.png){.absolute width="150px" top=0 right=0}
+
+::: {.nonincremental}
+- Keep all analyses in R
+- Classes for working with genomic data
+:::
+
+```{.r code-line-numbers="7-8"}
+## Genomic ranges
+library(GenomicRanges)
+GRanges("chr1:1-10000")
+
+## Genomic interactions
+library(InteractionSet)
+GInteractions(anchor1 = GRanges("chr1:1-10000"),
+              anchor2 = GRanges("chr1:1-10000"))
+```
+ 
+. . . 
+
+```{r}
+## Genomic interactions
+library(InteractionSet)
+GInteractions(anchor1 = GRanges("chr1:1-10000"),
+              anchor2 = GRanges("chr1:1-10000"))
+```
 
 ## Mariner functionality {.smallHeading}
 
