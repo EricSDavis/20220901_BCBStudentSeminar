@@ -40,7 +40,7 @@ Phanstiel Lab
 
 <div class="header">
   <img src="images/mariner_no_text_cropped.png" />
-  <h1 style="top:0px; margin-bottom:0px;">Mariner</h1>
+  <h1 style="top:0px;margin-bottom:0px;color:#ff9865;">Mariner</h1>
   <h4>"Explore the Hi-C's"</h4>
 <div>
 
