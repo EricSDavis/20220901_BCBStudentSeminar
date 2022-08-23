@@ -1037,6 +1037,482 @@ Custom
 </div>
 </section></section>
 <section>
+<section id="example-calling-de-novo-tads" class="title-slide slide level1 center middle" data-auto-animate="true">
+<h1 data-id="quarto-animate-title">Example: Calling <em>de novo</em> TADs</h1>
+
+</section>
+<section id="prepare-the-data" class="slide level2">
+<h2>Prepare the data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" data-code-line-numbers="|7-10|12-17|19-21|23|25-28|30-33|35-38"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="do">## Load required packages</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="fu">library</span>(mariner)</span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="fu">library</span>(InteractionSet)</span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="fu">library</span>(plyranges)</span>
+<span id="cb15-6"><a href="#cb15-6"></a></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="do">## List TAD files for each timepoint</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>bedpeFiles <span class="ot">&lt;-</span> </span>
+<span id="cb15-9"><a href="#cb15-9"></a>  <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"data/loops"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10"></a>             <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-11"><a href="#cb15-11"></a></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="do">## Read in data</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a>tadList <span class="ot">&lt;-</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a>  bedpeFiles <span class="sc">|&gt;</span></span>
+<span id="cb15-15"><a href="#cb15-15"></a>  <span class="fu">lapply</span>(fread, <span class="at">skip=</span><span class="dv">2</span>, <span class="at">select=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-16"><a href="#cb15-16"></a>  <span class="fu">lapply</span>(as_ginteractions) <span class="sc">|&gt;</span></span>
+<span id="cb15-17"><a href="#cb15-17"></a>  <span class="fu">setNames</span>(<span class="fu">gsub</span>(<span class="st">"[^0-9]+"</span>, <span class="st">""</span>, bedpeFiles))</span>
+<span id="cb15-18"><a href="#cb15-18"></a></span>
+<span id="cb15-19"><a href="#cb15-19"></a><span class="do">## Since the anchors are redundant,</span></span>
+<span id="cb15-20"><a href="#cb15-20"></a><span class="do">## define the loop at the tip of each</span></span>
+<span id="cb15-21"><a href="#cb15-21"></a><span class="do">## domain</span></span>
+<span id="cb15-22"><a href="#cb15-22"></a>giList <span class="ot">&lt;-</span> </span>
+<span id="cb15-23"><a href="#cb15-23"></a>  <span class="fu">lapply</span>(tadList, \(x, <span class="at">binSize =</span> <span class="fl">10e03</span>) {</span>
+<span id="cb15-24"><a href="#cb15-24"></a>  </span>
+<span id="cb15-25"><a href="#cb15-25"></a>    <span class="do">## Update the first anchor  </span></span>
+<span id="cb15-26"><a href="#cb15-26"></a>    newAnchor1 <span class="ot">&lt;-</span> </span>
+<span id="cb15-27"><a href="#cb15-27"></a>      <span class="fu">anchors</span>(x, <span class="st">'first'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-28"><a href="#cb15-28"></a>      <span class="fu">mutate</span>(<span class="at">end =</span> start <span class="sc">+</span> binSize)</span>
+<span id="cb15-29"><a href="#cb15-29"></a>  </span>
+<span id="cb15-30"><a href="#cb15-30"></a>    <span class="do">## Update the second anchor</span></span>
+<span id="cb15-31"><a href="#cb15-31"></a>    newAnchor2 <span class="ot">&lt;-</span> </span>
+<span id="cb15-32"><a href="#cb15-32"></a>      <span class="fu">anchors</span>(x, <span class="st">'second'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-33"><a href="#cb15-33"></a>      <span class="fu">mutate</span>(<span class="at">start =</span> end <span class="sc">-</span> binSize)</span>
+<span id="cb15-34"><a href="#cb15-34"></a>  </span>
+<span id="cb15-35"><a href="#cb15-35"></a>    <span class="do">## Form new GInteractions object</span></span>
+<span id="cb15-36"><a href="#cb15-36"></a>    <span class="fu">GInteractions</span>(<span class="at">anchor1 =</span> newAnchor1,</span>
+<span id="cb15-37"><a href="#cb15-37"></a>                  <span class="at">anchor2 =</span> newAnchor2,</span>
+<span id="cb15-38"><a href="#cb15-38"></a>                  <span class="at">name =</span> <span class="fu">paste0</span>(<span class="st">"TAD_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x)))</span>
+<span id="cb15-39"><a href="#cb15-39"></a>      </span>
+<span id="cb15-40"><a href="#cb15-40"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section>
+<section id="prepare-the-data-output" class="slide level2 output-location-slide"><h2>Prepare the data</h2><div class="cell output-location-slide">
+
+</div></section><section id="prepare-the-data-1" class="slide level2">
+<h2>Prepare the data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" data-code-line-numbers="1-2"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="do">## View input data</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>giList</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`0`
+GInteractions object with 10607 interactions and 1 metadata column:
+          seqnames1             ranges1     seqnames2             ranges2 |
+              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+      [1]         9   42730000-42740000 ---         9   43255000-43265000 |
+      [2]         9   15730000-15740000 ---         9   17485000-17495000 |
+      [3]         9   84375000-84385000 ---         9   85600000-85610000 |
+      [4]         9   70740000-70750000 ---         9   71250000-71260000 |
+      [5]         9   63545000-63555000 ---         9   63905000-63915000 |
+      ...       ...                 ... ...       ...                 ... .
+  [10603]         8 102420000-102430000 ---         8 102515000-102525000 |
+  [10604]         8   22925000-22935000 ---         8   23005000-23015000 |
+  [10605]         8 130130000-130140000 ---         8 130180000-130190000 |
+  [10606]         8   11410000-11420000 ---         8   11465000-11475000 |
+  [10607]         8   93495000-93505000 ---         8   93550000-93560000 |
+                 name
+          &lt;character&gt;
+      [1]       TAD_1
+      [2]       TAD_2
+      [3]       TAD_3
+      [4]       TAD_4
+      [5]       TAD_5
+      ...         ...
+  [10603]   TAD_10603
+  [10604]   TAD_10604
+  [10605]   TAD_10605
+  [10606]   TAD_10606
+  [10607]   TAD_10607
+  -------
+  regions: 20319 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths
+
+$`360`
+GInteractions object with 9651 interactions and 1 metadata column:
+         seqnames1             ranges1     seqnames2             ranges2 |
+             &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+     [1]         9   42730000-42740000 ---         9   43255000-43265000 |
+     [2]         9   28140000-28150000 ---         9   28465000-28475000 |
+     [3]         9   84375000-84385000 ---         9   85600000-85610000 |
+     [4]         9   27715000-27725000 ---         9   28075000-28085000 |
+     [5]         9   63545000-63555000 ---         9   63900000-63910000 |
+     ...       ...                 ... ...       ...                 ... .
+  [9647]         8   22925000-22935000 ---         8   23005000-23015000 |
+  [9648]         8 124750000-124760000 ---         8 124820000-124830000 |
+  [9649]         8   94720000-94730000 ---         8   94790000-94800000 |
+  [9650]         8 124650000-124660000 ---         8 124730000-124740000 |
+  [9651]         8 125235000-125245000 ---         8 125320000-125330000 |
+                name
+         &lt;character&gt;
+     [1]       TAD_1
+     [2]       TAD_2
+     [3]       TAD_3
+     [4]       TAD_4
+     [5]       TAD_5
+     ...         ...
+  [9647]    TAD_9647
+  [9648]    TAD_9648
+  [9649]    TAD_9649
+  [9650]    TAD_9650
+  [9651]    TAD_9651
+  -------
+  regions: 18529 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths
+
+$`4320`
+GInteractions object with 12468 interactions and 1 metadata column:
+          seqnames1             ranges1     seqnames2             ranges2 |
+              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+      [1]         9   10030000-10040000 ---         9   12535000-12545000 |
+      [2]         9   42730000-42740000 ---         9   43255000-43265000 |
+      [3]         9   17515000-17525000 ---         9   18890000-18900000 |
+      [4]         9   15770000-15780000 ---         9   17475000-17485000 |
+      [5]         9   73200000-73210000 ---         9   74670000-74680000 |
+      ...       ...                 ... ...       ...                 ... .
+  [12464]         8 130435000-130445000 ---         8 130510000-130520000 |
+  [12465]         8 124755000-124765000 ---         8 124830000-124840000 |
+  [12466]         8 129940000-129950000 ---         8 130005000-130015000 |
+  [12467]         8     2730000-2740000 ---         8     2790000-2800000 |
+  [12468]         8   97645000-97655000 ---         8   97710000-97720000 |
+                 name
+          &lt;character&gt;
+      [1]       TAD_1
+      [2]       TAD_2
+      [3]       TAD_3
+      [4]       TAD_4
+      [5]       TAD_5
+      ...         ...
+  [12464]   TAD_12464
+  [12465]   TAD_12465
+  [12466]   TAD_12466
+  [12467]   TAD_12467
+  [12468]   TAD_12468
+  -------
+  regions: 23800 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+</section>
+<section id="cluster-and-merge-pairs" class="slide level2">
+<h2>Cluster and merge pairs</h2>
+<div class="sourceCode" id="cb18" data-code-line-numbers="1-5|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="do">## Cluster and merge pairs</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>mgi <span class="ot">&lt;-</span> </span>
+<span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">mergePairs</span>(<span class="at">x =</span> giList,</span>
+<span id="cb18-4"><a href="#cb18-4"></a>             <span class="at">radius =</span> <span class="fl">10e05</span>,</span>
+<span id="cb18-5"><a href="#cb18-5"></a>             <span class="at">method =</span> <span class="st">"manhattan"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6"></a>mgi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="fragment">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>MergedGInteractions object with 841 interactions and 0 metadata columns:
+        seqnames1             ranges1     seqnames2             ranges2
+            &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt;
+    [1]        11   98435000-98445000 ---        11   99005000-99015000
+    [2]        10   84555000-84565000 ---        10   86075000-86085000
+    [3]        10   52260000-52270000 ---        10   52770000-52780000
+    [4]        12   38130000-38140000 ---        12   38300000-38310000
+    [5]        12   60105000-60115000 ---        12   60240000-60250000
+    ...       ...                 ... ...       ...                 ...
+  [837]        13 106363333-106373333 ---        13 106653333-106663333
+  [838]        16   51487500-51497500 ---        16   51875000-51885000
+  [839]         5 120745000-120755000 ---         5 121912500-121922500
+  [840]         8   76472500-76482500 ---         8   77315000-77325000
+  [841]         8   46070000-46080000 ---         8   46155000-46165000
+  -------
+  regions: 1680 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="closer-look-at-the-mergedginteractions-object" class="slide level2 scrollable">
+<h2>Closer look at the MergedGInteractions object</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="do">## How did it merge?</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="fu">selectionMethod</span>(mgi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Mean of modes"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="do">## What are the clusters?</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="fu">tail</span>(mgi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MergedGInteractions object with 6 interactions and 0 metadata columns:
+      seqnames1             ranges1     seqnames2             ranges2
+          &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt;
+  [1]         8   59142500-59152500 ---         8   59987500-59997500
+  [2]        13 106363333-106373333 ---        13 106653333-106663333
+  [3]        16   51487500-51497500 ---        16   51875000-51885000
+  [4]         5 120745000-120755000 ---         5 121912500-121922500
+  [5]         8   76472500-76482500 ---         8   77315000-77325000
+  [6]         8   46070000-46080000 ---         8   46155000-46165000
+  -------
+  regions: 1680 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">getPairClusters</span>(<span class="fu">tail</span>(mgi))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+   seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
+1:         8 59142500 59152500  10001       *         8 59987500 59997500
+2:         8 59142500 59152500  10001       *         8 59987500 59997500
+   width2 strand2      name  src
+1:  10001       *  TAD_9242  360
+2:  10001       * TAD_11901 4320
+
+[[2]]
+   seqnames1    start1      end1 width1 strand1 seqnames2    start2      end2
+1:        13 106363333 106373333  10001       *        13 106653333 106663333
+2:        13 106363333 106373333  10001       *        13 106653333 106663333
+3:        13 106363333 106373333  10001       *        13 106653333 106663333
+   width2 strand2     name  src
+1:  10001       * TAD_2357 4320
+2:  10001       * TAD_2367 4320
+3:  10001       * TAD_2465 4320
+
+[[3]]
+   seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
+1:        16 51487500 51497500  10001       *        16 51875000 51885000
+2:        16 51487500 51497500  10001       *        16 51875000 51885000
+   width2 strand2     name  src
+1:  10001       * TAD_3461 4320
+2:  10001       * TAD_3699 4320
+
+[[4]]
+   seqnames1    start1      end1 width1 strand1 seqnames2    start2      end2
+1:         5 120745000 120755000  10001       *         5 121912500 121922500
+2:         5 120745000 120755000  10001       *         5 121912500 121922500
+   width2 strand2     name  src
+1:  10001       * TAD_9381 4320
+2:  10001       * TAD_9384 4320
+
+[[5]]
+   seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
+1:         8 76472500 76482500  10001       *         8 77315000 77325000
+2:         8 76472500 76482500  10001       *         8 77315000 77325000
+   width2 strand2      name  src
+1:  10001       * TAD_11893 4320
+2:  10001       * TAD_11897 4320
+
+[[6]]
+   seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
+1:         8 46070000 46080000  10001       *         8 46155000 46165000
+2:         8 46070000 46080000  10001       *         8 46155000 46165000
+   width2 strand2      name  src
+1:  10001       * TAD_11943 4320
+2:  10001       * TAD_11961 4320</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="do">## Let's recover TAD names</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>mgi <span class="ot">&lt;-</span> <span class="fu">aggPairMcols</span>(mgi, <span class="at">columns =</span> <span class="st">"name"</span>, <span class="at">funs =</span> <span class="st">"list"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="fu">tail</span>(mgi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MergedGInteractions object with 6 interactions and 1 metadata column:
+      seqnames1             ranges1     seqnames2             ranges2 |
+          &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+  [1]         8   59142500-59152500 ---         8   59987500-59997500 |
+  [2]        13 106363333-106373333 ---        13 106653333-106663333 |
+  [3]        16   51487500-51497500 ---        16   51875000-51885000 |
+  [4]         5 120745000-120755000 ---         5 121912500-121922500 |
+  [5]         8   76472500-76482500 ---         8   77315000-77325000 |
+  [6]         8   46070000-46080000 ---         8   46155000-46165000 |
+                       list.name
+                          &lt;list&gt;
+  [1]         TAD_9242,TAD_11901
+  [2] TAD_2357,TAD_2367,TAD_2465
+  [3]          TAD_3461,TAD_3699
+  [4]          TAD_9381,TAD_9384
+  [5]        TAD_11893,TAD_11897
+  [6]        TAD_11943,TAD_11961
+  -------
+  regions: 1680 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+</section>
+<section id="calling-de-novo-with-subsetbysource" class="slide level2 scrollable">
+<h2>Calling <em>de novo</em> with <code>subsetBySource()</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="do">## Available sources</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="fu">sources</span>(mgi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "0"    "360"  "4320"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="do">## Subsetting TADs by source</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="fu">subsetBySource</span>(mgi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`0`
+MergedGInteractions object with 21 interactions and 1 metadata column:
+       seqnames1           ranges1     seqnames2           ranges2 |
+           &lt;Rle&gt;         &lt;IRanges&gt;         &lt;Rle&gt;         &lt;IRanges&gt; |
+   [1]        11 98435000-98445000 ---        11 99005000-99015000 |
+   [2]        10 84555000-84565000 ---        10 86075000-86085000 |
+   [3]        10 52260000-52270000 ---        10 52770000-52780000 |
+   [4]        12 38130000-38140000 ---        12 38300000-38310000 |
+   [5]        12 60105000-60115000 ---        12 60240000-60250000 |
+   ...       ...               ... ...       ...               ... .
+  [17]         6 73740000-73750000 ---         6 75215000-75225000 |
+  [18]         X 75030000-75040000 ---         X 75370000-75380000 |
+  [19]         8   3240000-3250000 ---         8   6330000-6340000 |
+  [20]         8 54585000-54595000 ---         8 55410000-55420000 |
+  [21]        20 54982500-54992500 ---        20 55252500-55262500 |
+               list.name
+                  &lt;list&gt;
+   [1]           TAD_458
+   [2]           TAD_967
+   [3]          TAD_1016
+   [4]          TAD_1617
+   [5]          TAD_1816
+   ...               ...
+  [17]          TAD_8559
+  [18]          TAD_9908
+  [19]         TAD_10134
+  [20]         TAD_10152
+  [21] TAD_5091,TAD_5218
+  -------
+  regions: 1680 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths
+
+$`360`
+MergedGInteractions object with 22 interactions and 1 metadata column:
+       seqnames1             ranges1     seqnames2             ranges2 |
+           &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+   [1]        11   54550000-54560000 ---        11   56815000-56825000 |
+   [2]        11   90170000-90180000 ---        11   90250000-90260000 |
+   [3]        10   89795000-89805000 ---        10   90725000-90735000 |
+   [4]        12   57960000-57970000 ---        12   62200000-62210000 |
+   [5]        15   52765000-52775000 ---        15   55170000-55180000 |
+   ...       ...                 ... ...       ...                 ... .
+  [18]         6   97430000-97440000 ---         6   99165000-99175000 |
+  [19]         7   67365000-67375000 ---         7   70165000-70175000 |
+  [20]         X   56780000-56790000 ---         X   58245000-58255000 |
+  [21]         X   63250000-63260000 ---         X   63555000-63565000 |
+  [22]         X 147850000-147860000 ---         X 147995000-148005000 |
+       list.name
+          &lt;list&gt;
+   [1]   TAD_393
+   [2]   TAD_726
+   [3]   TAD_905
+   [4]  TAD_1348
+   [5]  TAD_2285
+   ...       ...
+  [18]  TAD_7847
+  [19]  TAD_8430
+  [20]  TAD_8975
+  [21]  TAD_8988
+  [22]  TAD_9094
+  -------
+  regions: 1680 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths
+
+$`4320`
+MergedGInteractions object with 63 interactions and 1 metadata column:
+       seqnames1             ranges1     seqnames2             ranges2 |
+           &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+   [1]         9   10030000-10040000 ---         9   12535000-12545000 |
+   [2]         9   17515000-17525000 ---         9   18890000-18900000 |
+   [3]         9   73200000-73210000 ---         9   74670000-74680000 |
+   [4]        11   22870000-22880000 ---        11   26265000-26275000 |
+   [5]        11 127120000-127130000 ---        11 128010000-128020000 |
+   ...       ...                 ... ...       ...                 ... .
+  [59]        13 106363333-106373333 ---        13 106653333-106663333 |
+  [60]        16   51487500-51497500 ---        16   51875000-51885000 |
+  [61]         5 120745000-120755000 ---         5 121912500-121922500 |
+  [62]         8   76472500-76482500 ---         8   77315000-77325000 |
+  [63]         8   46070000-46080000 ---         8   46155000-46165000 |
+                        list.name
+                           &lt;list&gt;
+   [1]                      TAD_1
+   [2]                      TAD_3
+   [3]                      TAD_5
+   [4]                    TAD_469
+   [5]                    TAD_478
+   ...                        ...
+  [59] TAD_2357,TAD_2367,TAD_2465
+  [60]          TAD_3461,TAD_3699
+  [61]          TAD_9381,TAD_9384
+  [62]        TAD_11893,TAD_11897
+  [63]        TAD_11943,TAD_11961
+  -------
+  regions: 1680 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="do">## De novo (must be in 6 &amp; 72 but not in 0)</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="fu">subsetBySource</span>(<span class="at">x =</span> mgi,</span>
+<span id="cb32-3"><a href="#cb32-3"></a>               <span class="at">include =</span> <span class="fu">c</span>(<span class="st">"360"</span>, <span class="st">"4320"</span>),</span>
+<span id="cb32-4"><a href="#cb32-4"></a>               <span class="at">exclude =</span> <span class="st">"0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MergedGInteractions object with 25 interactions and 1 metadata column:
+       seqnames1             ranges1     seqnames2             ranges2 |
+           &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+   [1]        11   79665000-79675000 ---        11   82630000-82640000 |
+   [2]        11   97302500-97312500 ---        11   99015000-99025000 |
+   [3]        10     9320000-9330000 ---        10   11070000-11080000 |
+   [4]        12   43967500-43977500 ---        12   44935000-44945000 |
+   [5]        13   33220000-33230000 ---        13   33530000-33540000 |
+   ...       ...                 ... ...       ...                 ... .
+  [21]         6 100960000-100970000 ---         6 104557500-104567500 |
+  [22]         6 161720000-161730000 ---         6 163070000-163080000 |
+  [23]         6   18535000-18545000 ---         6   20050000-20060000 |
+  [24]         7   51430000-51440000 ---         7   54610000-54620000 |
+  [25]         8   59142500-59152500 ---         8   59987500-59997500 |
+                         list.name
+                            &lt;list&gt;
+   [1]             TAD_392,TAD_468
+   [2]             TAD_398,TAD_472
+   [3]            TAD_904,TAD_1104
+   [4]           TAD_1352,TAD_1706
+   [5]  TAD_1896,TAD_2420,TAD_2520
+   ...                         ...
+  [21]          TAD_7845,TAD_10046
+  [22]          TAD_7853,TAD_10050
+  [23]          TAD_7854,TAD_10072
+  [24] TAD_8427,TAD_8428,TAD_10830
+  [25]          TAD_9242,TAD_11901
+  -------
+  regions: 1680 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="do">## Transient TADs</span></span>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="fu">subsetBySource</span>(<span class="at">x =</span> mgi,</span>
+<span id="cb34-3"><a href="#cb34-3"></a>               <span class="at">include =</span> <span class="st">"360"</span>,</span>
+<span id="cb34-4"><a href="#cb34-4"></a>               <span class="at">exclude =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"4320"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MergedGInteractions object with 22 interactions and 1 metadata column:
+       seqnames1             ranges1     seqnames2             ranges2 |
+           &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+   [1]        11   54550000-54560000 ---        11   56815000-56825000 |
+   [2]        11   90170000-90180000 ---        11   90250000-90260000 |
+   [3]        10   89795000-89805000 ---        10   90725000-90735000 |
+   [4]        12   57960000-57970000 ---        12   62200000-62210000 |
+   [5]        15   52765000-52775000 ---        15   55170000-55180000 |
+   ...       ...                 ... ...       ...                 ... .
+  [18]         6   97430000-97440000 ---         6   99165000-99175000 |
+  [19]         7   67365000-67375000 ---         7   70165000-70175000 |
+  [20]         X   56780000-56790000 ---         X   58245000-58255000 |
+  [21]         X   63250000-63260000 ---         X   63555000-63565000 |
+  [22]         X 147850000-147860000 ---         X 147995000-148005000 |
+       list.name
+          &lt;list&gt;
+   [1]   TAD_393
+   [2]   TAD_726
+   [3]   TAD_905
+   [4]  TAD_1348
+   [5]  TAD_2285
+   ...       ...
+  [18]  TAD_7847
+  [19]  TAD_8430
+  [20]  TAD_8975
+  [21]  TAD_8988
+  [22]  TAD_9094
+  -------
+  regions: 1680 ranges and 0 metadata columns
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-with-plotgardener" class="slide level2">
+<h2>Visualize with <code>plotgardener</code></h2>
+</section></section>
+<section>
 <section id="references" class="title-slide slide level1 center middle">
 <h1>References</h1>
 

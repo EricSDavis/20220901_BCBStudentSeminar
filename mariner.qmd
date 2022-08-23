@@ -17,6 +17,8 @@ bibliography: references.bib
 # title-slide-attributes:
 #   data-background-image: "images/mariner_no_text_cropped.png"
 #   data-background-opacity: "1"
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -608,6 +610,138 @@ In collaboration with Marielle Bond
 ::: footer
 In collaboration with Marielle Bond
 :::
+
+# Example: Calling _de novo_ TADs {.center .middle auto-animate=true}
+
+## Prepare the data
+
+```{r}
+#| echo: true
+#| code-line-numbers: "|7-10|12-17|19-21|23|25-28|30-33|35-38"
+#| code-overflow: scroll
+#| output-location: slide
+
+## Load required packages
+library(data.table)
+library(mariner)
+library(InteractionSet)
+library(plyranges)
+
+## List TAD files for each timepoint
+bedpeFiles <- 
+  list.files(path = "data/loops",
+             full.names = TRUE)
+
+## Read in data
+tadList <-
+  bedpeFiles |>
+  lapply(fread, skip=2, select=1:6) |>
+  lapply(as_ginteractions) |>
+  setNames(gsub("[^0-9]+", "", bedpeFiles))
+
+## Since the anchors are redundant,
+## define the loop at the tip of each
+## domain
+giList <- 
+  lapply(tadList, \(x, binSize = 10e03) {
+  
+    ## Update the first anchor  
+    newAnchor1 <- 
+      anchors(x, 'first') |>
+      mutate(end = start + binSize)
+  
+    ## Update the second anchor
+    newAnchor2 <- 
+      anchors(x, 'second') |>
+      mutate(start = end - binSize)
+  
+    ## Form new GInteractions object
+    GInteractions(anchor1 = newAnchor1,
+                  anchor2 = newAnchor2,
+                  name = paste0("TAD_", 1:length(x)))
+      
+  })
+```
+
+## Prepare the data
+
+```{r}
+#| echo: true
+#| code-line-numbers: "1-2"
+#| code-overflow: scroll
+#| output-location: default
+## View input data
+giList
+```
+
+## Cluster and merge pairs
+
+```{.r code-line-numbers="1-5|6"}
+## Cluster and merge pairs
+mgi <- 
+  mergePairs(x = giList,
+             radius = 10e05,
+             method = "manhattan")
+mgi
+```
+
+. . . 
+
+```{r}
+## Cluster and merge pairs
+mgi <- 
+  mergePairs(x = giList,
+             radius = 10e05,
+             method = "manhattan")
+mgi
+```
+
+
+## Closer look at the MergedGInteractions object {.r-fit-text .scrollable}
+
+```{r}
+#| echo: true
+#| code-line-numbers: true
+#| code-overflow: scroll
+
+## How did it merge?
+selectionMethod(mgi)
+
+## What are the clusters?
+tail(mgi)
+getPairClusters(tail(mgi))
+
+## Let's recover TAD names
+mgi <- aggPairMcols(mgi, columns = "name", funs = "list")
+tail(mgi)
+```
+
+## Calling _de novo_ with `subsetBySource()` {.scrollable}
+
+```{r}
+#| echo: true
+#| code-line-numbers: true
+#| code-overflow: scroll
+
+## Available sources
+sources(mgi)
+
+## Subsetting TADs by source
+subsetBySource(mgi)
+
+## De novo (must be in 6 & 72 but not in 0)
+subsetBySource(x = mgi,
+               include = c("360", "4320"),
+               exclude = "0")
+
+## Transient TADs
+subsetBySource(x = mgi,
+               include = "360",
+               exclude = c("0", "4320"))
+```
+
+## Visualize with `plotgardener`
+
 
 
 # References {.center .middle}
