@@ -1,5 +1,5 @@
 ---
-# title: "Mariner: Explore the Hi-C's"
+# title: "Mariner: Explore the Hi-Cs"
 # institute: "BCB Student Seminar"
 # author: "Eric Davis <br> Phanstiel Lab"
 # date: "09-01-2022"
@@ -291,28 +291,192 @@ GInteractions(anchor1 = GRanges("chr1:1-10000"),
 ```
 
 
-## Mariner functionality {.smallHeading}
+## Mariner functionality
+
+### Manipulating/Merging Pairs
+::: columns
+::: {.column width="50%"}
+```{.r code-line-numbers="1"}
+as_ginteractions(df, ...)
+
+binPairs(x, binSize, pos1, pos2, ...) 
+
+filterPairs(x, binSize, ...)
+
+mergePairs(x, radius, ...)
+```
+
+<br>
+[Convert `data.frame` to `GInteractions`]{style="font-size:22pt"}
+
+:::
+
+::: {.column .middle width="50%"}
+![](images/paste-B9258AD3.png){width=50%}
+:::
+:::
+
+## Mariner functionality
+
+### Manipulating/Merging Pairs
+::: columns
+::: {.column width="50%"}
+```{.r code-line-numbers="3"}
+as_ginteractions(df, ...)
+
+binPairs(x, binSize, pos1, pos2, ...) 
+
+filterPairs(x, binSize, ...)
+
+mergePairs(x, radius, ...)
+```
+
+<br>
+[Assign paired-ranges to specified `binSize`]{style="font-size:22pt"}
+
+:::
+
+::: {.column .middle width="50%"}
+![](images/paste-B9258AD3.png){width=50%}
+:::
+:::
+
+## Mariner functionality
+
+### Manipulating/Merging Pairs
+::: columns
+::: {.column width="50%"}
+```{.r code-line-numbers="5"}
+as_ginteractions(df, ...)
+
+binPairs(x, binSize, pos1, pos2, ...) 
+
+filterPairs(x, binSize, buffer, ...)
+
+mergePairs(x, radius, ...)
+```
+
+<br>
+[Filter out paired-ranges that would
+intersect the diagonal]{style="font-size:22pt"}
+
+
+:::
+
+::: {.column .middle width="50%"}
+![](images/filterPairs.png){width=50%}
+:::
+:::
+
+## Mariner functionality
+
+### Manipulating/Merging Pairs
+::: columns
+::: {.column width="50%"}
+```{.r code-line-numbers="7"}
+as_ginteractions(df, ...)
+
+binPairs(x, binSize, pos1, pos2, ...) 
+
+filterPairs(x, binSize, buffer, ...)
+
+mergePairs(x, radius, ...)
+```
+
+<br>
+[Cluster pairs with DBSCAN, then select
+a representative pair.]{style="font-size:22pt"}
+
+
+:::
+
+::: {.column .middle width="50%"}
+![](images/mergePairs.png){width=80%}
+:::
+:::
+
+
+## Mariner functionality
+
+### Generating Pairs from Ranges
 
 ::: columns
 ::: {.column width="50%"}
-### Manipulating/Merging Anchors
+```{.r}
+rangesToPairs(x, window, ...)
 
--   binning
--   shifting
--   filtering
--   clustering
--   merging
+rangesToPairs(x, y, window, ...)
+
+rangesToPairs(x, y, within, ...)
+```
+
+<br>
+[Different ways to generate paired-ranges
+from range objects (i.e. BED files).]{style="font-size:22pt"}
+
+
 :::
 
-::: {.column width="50%"}
+::: {.column .middle width="50%"}
+![](images/Clipboard_2022-08-22-23-17-19.png){width=80%}
+:::
+:::
+
+## Mariner functionality {auto-animate=true}
+
 ### Extracting/Aggregating Interactions
+
+::: columns
+::: {.column width="50%"}
+
+**Extracting Hi-C Pixels**
+```{.r}
+pullHicPixels(x, hic, ...)
+
+pullHicMatrices(x, hic, buffer, ...)
+
+pullHicDomains(x, hic, ...)
+```
+
+[**Pull** different subsets of Hi-C data]{style="font-size:22pt"}
+
 :::
 
-::: {.column width="50%"}
-### Generating Pairs from Ranges
+::: {.column .middle width="50%"}
+![](images/apa.png){width=40%}
+:::
 :::
 
+## Mariner functionality {auto-animate=true}
+
+### Extracting/Aggregating Interactions
+
+::: columns
 ::: {.column width="50%"}
-### Visualization
+
+**Extracting Hi-C Pixels**
+```{.r}
+pullHicPixels(x, hic, ...)
+
+pullHicMatrices(x, hic, buffer, ...)
+
+pullHicDomains(x, hic, ...)
+```
+
+**Aggregating Hi-C Contacts**
+```{.r}
+aggregate(x, hic, shape, fun, ...)
+
+summarize(x, hic, ...)
+```
+
+[**Pull** different subsets of Hi-C data]{style="font-size:22pt"}
+
+[**Aggregate** or **summarize** in custom shapes]{style="font-size:22pt"}
+
+:::
+
+::: {.column .middle width="50%"}
+![](images/apa_aggregate.png){width=40%}
 :::
 :::
