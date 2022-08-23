@@ -19,6 +19,7 @@ chalkboard: true
 #   data-background-opacity: "1"
 ---
 
+
 ## {auto-animate=true}
 
 <div class="header">
@@ -56,6 +57,8 @@ Phanstiel Lab
 
 
 <!-- Why do we need this? -->
+
+# Why do we need this? {.center .middle}
 
 ## Why do we need this?
 
@@ -192,6 +195,8 @@ Phanstiel Lab
 
 <!-- Bioconductor environment -->
 
+# Advantages of the Bioconductor environment {.center .middle}
+
 ## Bioconductor environment {auto-animate=true}
 
 ![](images/bioclogo.png){.absolute width="150px" top=0 right=0}
@@ -255,8 +260,6 @@ GRanges(seqnames = c("chr1", "chr2"),
 
 ## Bioconductor environment {auto-animate=true}
 
-::: footer
-:::
 
 ![](images/bioclogo.png){.absolute width="150px" top=0 right=0}
 
@@ -291,9 +294,9 @@ GInteractions(anchor1 = GRanges("chr1:1-10000"),
 ```
 
 
-## Mariner functionality
+# Mariner functionality {.center .middle}
 
-### Manipulating/Merging Pairs
+## Manipulating/Merging Pairs
 ::: columns
 ::: {.column width="50%"}
 ```{.r code-line-numbers="1"}
@@ -316,9 +319,7 @@ mergePairs(x, radius, ...)
 :::
 :::
 
-## Mariner functionality
-
-### Manipulating/Merging Pairs
+## Manipulating/Merging Pairs
 ::: columns
 ::: {.column width="50%"}
 ```{.r code-line-numbers="3"}
@@ -341,9 +342,7 @@ mergePairs(x, radius, ...)
 :::
 :::
 
-## Mariner functionality
-
-### Manipulating/Merging Pairs
+## Manipulating/Merging Pairs
 ::: columns
 ::: {.column width="50%"}
 ```{.r code-line-numbers="5"}
@@ -368,9 +367,7 @@ intersect the diagonal]{style="font-size:22pt"}
 :::
 :::
 
-## Mariner functionality
-
-### Manipulating/Merging Pairs
+## Manipulating/Merging Pairs
 ::: columns
 ::: {.column width="50%"}
 ```{.r code-line-numbers="7"}
@@ -396,9 +393,7 @@ a representative pair.]{style="font-size:22pt"}
 :::
 
 
-## Mariner functionality
-
-### Generating Pairs from Ranges
+## Generating Pairs from Ranges
 
 ::: columns
 ::: {.column width="50%"}
@@ -422,9 +417,7 @@ from range objects (i.e. BED files).]{style="font-size:22pt"}
 :::
 :::
 
-## Mariner functionality {auto-animate=true}
-
-### Extracting/Aggregating Interactions
+## Extracting/Aggregating Interactions {auto-animate=true}
 
 ::: columns
 ::: {.column width="50%"}
@@ -447,9 +440,7 @@ pullHicDomains(x, hic, ...)
 :::
 :::
 
-## Mariner functionality {auto-animate=true}
-
-### Extracting/Aggregating Interactions
+## Extracting/Aggregating Interactions {auto-animate=true}
 
 ::: columns
 ::: {.column width="50%"}
@@ -479,4 +470,70 @@ summarize(x, hic, ...)
 ::: {.column .middle width="50%"}
 ![](images/apa_aggregate.png){width=40%}
 :::
+:::
+
+# Workflows {.center .middle}
+
+## {auto-animate=true .middle}
+
+::: {.absolute top=50% left=37%}
+Differential loop calling
+:::
+
+## {auto-animate=true .middle}
+
+::: {.absolute top=50%  left=25%}
+Inter/Intrachromosomal pile-up analysis
+
+[Differential loop calling]{style="color:#787878;"}
+:::
+
+## {auto-animate=true .middle}
+
+::: {.absolute top=50%  left=25%}
+Characterizing loop signal decay
+
+[Inter/Intrachromosomal pile-up analysis]{style="color:#787878;"}
+
+[Differential loop calling]{style="color:#989898;"}
+:::
+
+## {auto-animate=true .middle}
+
+::: {.absolute top=50%  left=25%}
+Target contact enrichment
+
+[Characterizing loop signal decay]{style="color:#787878;"}
+
+[Inter/Intrachromosomal pile-up analysis]{style="color:#989898;"}
+
+[Differential loop calling]{style="color:	#B8B8B8;"}
+:::
+
+## {auto-animate=true .middle}
+
+::: {.absolute top=50%  left=25%}
+Identifying _de Novo_ loops/TADs
+
+[Target contact enrichment]{style="color:#787878;"}
+
+[Characterizing loop signal decay]{style="color:#989898;"}
+
+[Inter/Intrachromosomal pile-up analysis]{style="color:	#B8B8B8;"}
+
+[Differential loop calling]{style="color:	#D8D8D8;"}
+:::
+
+## {auto-animate=true .middle}
+
+::: {.absolute top=50%  left=25%}
+**Identifying _de Novo_ loops/TADs**
+
+[Target contact enrichment]{style="color:#787878;"}
+
+[Characterizing loop signal decay]{style="color:#989898;"}
+
+[Inter/Intrachromosomal pile-up analysis]{style="color:	#B8B8B8;"}
+
+[Differential loop calling]{style="color:	#D8D8D8;"}
 :::
