@@ -12,7 +12,7 @@ format:
     logo: images/bcb_logo.png
     footer: <https://github.com/EricSDavis/mariner>
 editor: source
-chalkboard: true
+bibliography: references.bib
 # center-title-slide: false
 # title-slide-attributes:
 #   data-background-image: "images/mariner_no_text_cropped.png"
@@ -476,31 +476,72 @@ summarize(x, hic, ...)
 
 ## {auto-animate=true .middle}
 
-::: {.absolute top=50% left=37%}
+::: {style="height:50%; width:100%; margin:auto;"}
+
+![](images/diffLoopCalling.png){width=50%}
+
+:::
+
+::: {style="height:50%; width:100%; margin:auto;"}
+
 Differential loop calling
+
+:::
+
+::: footer
+@ahn2021
 :::
 
 ## {auto-animate=true .middle}
 
-::: {.absolute top=50%  left=25%}
+::: {style="height:50%; width:100%; margin:auto;"}
+
+![](images/apa_analysis2.png){width=100%}
+
+:::
+
+::: {style="height:50%; width:100%; margin:auto;"}
+
 Inter/Intrachromosomal pile-up analysis
 
 [Differential loop calling]{style="color:#787878;"}
+
+:::
+
+::: footer
+In collaboration with Wang Lab, Sarah Parker, Isha Sahasrabudhe,
+Yoseli Quiroga and JP Flores.
 :::
 
 ## {auto-animate=true .middle}
 
-::: {.absolute top=50%  left=25%}
+::: {style="height:50%; width:100%; margin:auto;"}
+
+![](images/loopDecay.png){width=35%}
+
+:::
+
+::: {style="height:50%; width:100%; margin:auto;"}
+
 Characterizing loop signal decay
 
 [Inter/Intrachromosomal pile-up analysis]{style="color:#787878;"}
 
 [Differential loop calling]{style="color:#989898;"}
+
 :::
 
 ## {auto-animate=true .middle}
 
-::: {.absolute top=50%  left=25%}
+::: {style="height:50%; width:100%; margin:auto;"}
+
+![](images/contact_enrichment1.png){height=300px}
+![](images/contact_enrichment2.png){height=300px}
+
+:::
+
+::: {style="height:50%; width:100%; margin:auto;"}
+
 Target contact enrichment
 
 [Characterizing loop signal decay]{style="color:#787878;"}
@@ -508,11 +549,23 @@ Target contact enrichment
 [Inter/Intrachromosomal pile-up analysis]{style="color:#989898;"}
 
 [Differential loop calling]{style="color:	#B8B8B8;"}
+
+:::
+
+::: footer
+@kelly2022
 :::
 
 ## {auto-animate=true .middle}
 
-::: {.absolute top=50%  left=25%}
+::: {style="height:50%; width:100%; margin:auto;"}
+
+![](images/deNovoTADs.png){width=25%}
+
+:::
+
+::: {style="height:50%; width:100%; margin:auto;"}
+
 Identifying _de Novo_ loops/TADs
 
 [Target contact enrichment]{style="color:#787878;"}
@@ -522,11 +575,24 @@ Identifying _de Novo_ loops/TADs
 [Inter/Intrachromosomal pile-up analysis]{style="color:	#B8B8B8;"}
 
 [Differential loop calling]{style="color:	#D8D8D8;"}
+
 :::
+
+::: footer
+In collaboration with Marielle Bond
+:::
+
 
 ## {auto-animate=true .middle}
 
-::: {.absolute top=50%  left=25%}
+::: {style="height:50%; width:100%; margin:auto;"}
+
+![](images/deNovoTADs.png){width=25%}
+
+:::
+
+::: {style="height:50%; width:100%; margin:auto;"}
+
 **Identifying _de Novo_ loops/TADs**
 
 [Target contact enrichment]{style="color:#787878;"}
@@ -536,4 +602,16 @@ Identifying _de Novo_ loops/TADs
 [Inter/Intrachromosomal pile-up analysis]{style="color:	#B8B8B8;"}
 
 [Differential loop calling]{style="color:	#D8D8D8;"}
+
+:::
+
+::: footer
+In collaboration with Marielle Bond
+:::
+
+
+# References {.center .middle}
+
+## References
+::: {#refs}
 :::
