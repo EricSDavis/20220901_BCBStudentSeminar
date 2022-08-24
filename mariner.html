@@ -1087,11 +1087,8 @@ Custom
 <span id="cb15-39"><a href="#cb15-39"></a>      </span>
 <span id="cb15-40"><a href="#cb15-40"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-
 </section>
-<section id="prepare-the-data-output" class="slide level2 output-location-slide"><h2>Prepare the data</h2><div class="cell output-location-slide">
-
-</div></section><section id="prepare-the-data-1" class="slide level2 nonincremental">
+<section id="prepare-the-data-1" class="slide level2 nonincremental">
 <h2>Prepare the data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16" data-code-line-numbers="1-2"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="do">## View input data</span></span>
@@ -1200,7 +1197,7 @@ GInteractions object with 12468 interactions and 1 metadata column:
 <div class="sourceCode" id="cb18" data-code-line-numbers="1-5|6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="do">## Cluster and merge pairs</span></span>
 <span id="cb18-2"><a href="#cb18-2"></a>mgi <span class="ot">&lt;-</span> </span>
 <span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">mergePairs</span>(<span class="at">x =</span> giList,</span>
-<span id="cb18-4"><a href="#cb18-4"></a>             <span class="at">radius =</span> <span class="fl">10e05</span>,</span>
+<span id="cb18-4"><a href="#cb18-4"></a>             <span class="at">radius =</span> <span class="fl">10e03</span>,</span>
 <span id="cb18-5"><a href="#cb18-5"></a>             <span class="at">method =</span> <span class="st">"manhattan"</span>)</span>
 <span id="cb18-6"><a href="#cb18-6"></a>mgi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="fragment">
@@ -1471,7 +1468,7 @@ MergedGInteractions object with 5766 interactions and 1 metadata column:
   regions: 36450 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="do">## De novo (must be in 6 &amp; 72 but not in 0)</span></span>
+<div class="sourceCode cell-code" id="cb34" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="do">## De novo (must be in 72 but not in 0)</span></span>
 <span id="cb34-2"><a href="#cb34-2"></a>deNovo <span class="ot">&lt;-</span></span>
 <span id="cb34-3"><a href="#cb34-3"></a>  <span class="fu">subsetBySource</span>(<span class="at">x =</span> mgi,</span>
 <span id="cb34-4"><a href="#cb34-4"></a>                 <span class="at">include =</span> <span class="st">"4320"</span>,</span>

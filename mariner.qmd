@@ -612,7 +612,7 @@ In collaboration with Marielle Bond
 #| echo: true
 #| code-line-numbers: "|7-10|12-17|19-21|23|25-28|30-33|35-38"
 #| code-overflow: scroll
-#| output-location: slide
+#| output-location: default
 
 ## Load required packages
 library(data.table)
@@ -673,7 +673,7 @@ giList
 ## Cluster and merge pairs
 mgi <- 
   mergePairs(x = giList,
-             radius = 10e05,
+             radius = 10e03,
              method = "manhattan")
 mgi
 ```
@@ -727,7 +727,7 @@ subsetBySource(x = mgi,
                include = "360",
                exclude = c("0", "4320"))
 
-## De novo (must be in 6 & 72 but not in 0)
+## De novo (must be in 72 but not in 0)
 deNovo <-
   subsetBySource(x = mgi,
                  include = "4320",
