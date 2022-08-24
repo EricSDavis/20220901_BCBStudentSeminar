@@ -604,68 +604,42 @@ In collaboration with Marielle Bond
 In collaboration with Marielle Bond
 :::
 
-# Example: Calling _de novo_ TADs {.center .middle auto-animate=true}
+# Example: Calling _de novo_ loops {.center .middle auto-animate=true}
 
 ## Prepare the data
 
 ```{r}
 #| echo: true
-#| code-line-numbers: "|7-10|12-17|19-21|23|25-28|30-33|35-38"
+#| code-line-numbers: "|5-8|10-14|15"
 #| code-overflow: scroll
 #| output-location: default
 
 ## Load required packages
 library(data.table)
 library(mariner)
-library(InteractionSet)
-library(plyranges)
 
-## List TAD files for each timepoint
-bedpeFiles <- 
-  list.files(path = "data/tads",
+## List loop files for each timepoint
+bedpeFiles <-
+  list.files(path = "data/loops",
              full.names = TRUE)
 
-## Read in data
-tadList <-
-  bedpeFiles |>
-  lapply(fread, skip=2, select=1:6) |>
+## Read in data and format as GInteractions
+giList <-
+  lapply(bedpeFiles, fread) |>
   lapply(as_ginteractions) |>
   setNames(gsub("[^0-9]+", "", bedpeFiles))
-
-## Since the anchors are redundant,
-## define the loop at the tip of each
-## domain
-giList <- 
-  lapply(tadList, \(x, binSize = 10e03) {
-  
-    ## Update the first anchor  
-    newAnchor1 <- 
-      anchors(x, 'first') |>
-      mutate(end = start + binSize)
-  
-    ## Update the second anchor
-    newAnchor2 <- 
-      anchors(x, 'second') |>
-      mutate(start = end - binSize)
-  
-    ## Form new GInteractions object
-    GInteractions(anchor1 = newAnchor1,
-                  anchor2 = newAnchor2,
-                  name = paste0("TAD_", 1:length(x)))
-      
-  })
 ```
 
-## Prepare the data {.nonincremental}
+## Prepare the data
 
 ```{r}
 #| echo: true
-#| code-line-numbers: "1-2"
+#| code-line-numbers: true
 #| code-overflow: scroll
 #| output-location: default
-## View input data
 giList
 ```
+
 
 ## Cluster and merge pairs
 
@@ -705,7 +679,7 @@ tail(mgi)
 getPairClusters(tail(mgi))
 
 ## Let's recover TAD names
-mgi <- aggPairMcols(mgi, columns = "name", funs = "list")
+mgi <- aggPairMcols(mgi, columns = "APScoreAvg", funs = "mean")
 tail(mgi)
 ```
 
@@ -719,10 +693,10 @@ tail(mgi)
 ## Available sources
 sources(mgi)
 
-## Subsetting TADs by source
+## Subsetting loops by source
 subsetBySource(mgi)
 
-## Transient TADs
+## Transient loops
 subsetBySource(x = mgi,
                include = "360",
                exclude = c("0", "4320"))
@@ -735,7 +709,7 @@ deNovo <-
 deNovo
 ```
 
-## Transform _de novo_ TADs for visualization
+## Format for visualization
 
 ```{r}
 #| echo: true
@@ -747,14 +721,11 @@ deNovo <-
   binPairs(x = deNovo,
            binSize = 10e03)
 
-## Reassemble TADs
-anchor1 <- anchors(deNovo, "first")
-anchor2 <- anchors(deNovo, "second")
-deNovoTads <- 
-  GRanges(seqnames = seqnames(anchor1),
-          ranges = IRanges(start = start(anchor1),
-                           end = end(anchor2)))
-head(deNovoTads)
+## Change chromosome style
+library(package = "GenomeInfoDb",
+        include.only = "seqlevelsStyle")
+seqlevelsStyle(deNovo) <- "ENSEMBL"
+deNovo
 ```
 
 ## Visualize with `plotgardener`
@@ -773,10 +744,10 @@ p <- pgParams(assembly = "hg38",
               
              ## Define region of interest
              chrom = "7",
-             chromstart = 54490000,
-             chromend = 56130000,
+             chromstart = 54660000,
+             chromend = 55350000,
              resolution = 10e03,
-             zrange = c(0, 200),
+             zrange = c(0, 275),
              norm = "SCALE",
              
              ## Define reference point
@@ -800,11 +771,12 @@ bottom <-
                 params = p,
                 half = "bottom")
 
-## Annotate TAD domains
-annoDomains(plot = bottom,
-            data = deNovoTads,
-            linecolor = "red",
-            params = p)
+## Annotate loop pixels
+annoPixels(plot = bottom,
+           data = deNovo,
+           shift = 3,
+           col = 'red',
+           params = p)
 
 ## Annotate heatmap legend
 annoHeatmapLegend(plot = bottom,
@@ -819,7 +791,7 @@ annoHeatmapLegend(plot = bottom,
 annoGenomeLabel(plot = bottom,
                 params = p,
                 y = p$y + p$height,
-                scale = "Mb")
+                scale = "bp")
 
 ## Text annotations
 plotText(label = c("0 hrs", "72 hrs"),
@@ -833,7 +805,6 @@ plotText(label = "72 hrs",
          x = p$x + p$width - p$space,
          y = p$y + p$height - p$space,
          just = c("right", "bottom"))
-
 ```
 
 # References {.center .middle}
