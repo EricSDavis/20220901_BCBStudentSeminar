@@ -1039,156 +1039,207 @@ Custom
 </div>
 </section></section>
 <section>
-<section id="example-calling-de-novo-tads" class="title-slide slide level1 center middle" data-auto-animate="true">
-<h1 data-id="quarto-animate-title">Example: Calling <em>de novo</em> TADs</h1>
+<section id="example-calling-de-novo-loops" class="title-slide slide level1 center middle" data-auto-animate="true">
+<h1 data-id="quarto-animate-title">Example: Calling <em>de novo</em> loops</h1>
 
 </section>
 <section id="prepare-the-data" class="slide level2">
 <h2>Prepare the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15" data-code-line-numbers="|7-10|12-17|19-21|23|25-28|30-33|35-38"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="do">## Load required packages</span></span>
+<div class="sourceCode cell-code" id="cb15" data-code-line-numbers="|5-8|10-14|15"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="do">## Load required packages</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="fu">library</span>(data.table)</span>
 <span id="cb15-3"><a href="#cb15-3"></a><span class="fu">library</span>(mariner)</span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="fu">library</span>(InteractionSet)</span>
-<span id="cb15-5"><a href="#cb15-5"></a><span class="fu">library</span>(plyranges)</span>
-<span id="cb15-6"><a href="#cb15-6"></a></span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="do">## List TAD files for each timepoint</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a>bedpeFiles <span class="ot">&lt;-</span> </span>
-<span id="cb15-9"><a href="#cb15-9"></a>  <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"data/tads"</span>,</span>
-<span id="cb15-10"><a href="#cb15-10"></a>             <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-11"><a href="#cb15-11"></a></span>
-<span id="cb15-12"><a href="#cb15-12"></a><span class="do">## Read in data</span></span>
-<span id="cb15-13"><a href="#cb15-13"></a>tadList <span class="ot">&lt;-</span></span>
-<span id="cb15-14"><a href="#cb15-14"></a>  bedpeFiles <span class="sc">|&gt;</span></span>
-<span id="cb15-15"><a href="#cb15-15"></a>  <span class="fu">lapply</span>(fread, <span class="at">skip=</span><span class="dv">2</span>, <span class="at">select=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-16"><a href="#cb15-16"></a>  <span class="fu">lapply</span>(as_ginteractions) <span class="sc">|&gt;</span></span>
-<span id="cb15-17"><a href="#cb15-17"></a>  <span class="fu">setNames</span>(<span class="fu">gsub</span>(<span class="st">"[^0-9]+"</span>, <span class="st">""</span>, bedpeFiles))</span>
-<span id="cb15-18"><a href="#cb15-18"></a></span>
-<span id="cb15-19"><a href="#cb15-19"></a><span class="do">## Since the anchors are redundant,</span></span>
-<span id="cb15-20"><a href="#cb15-20"></a><span class="do">## define the loop at the tip of each</span></span>
-<span id="cb15-21"><a href="#cb15-21"></a><span class="do">## domain</span></span>
-<span id="cb15-22"><a href="#cb15-22"></a>giList <span class="ot">&lt;-</span> </span>
-<span id="cb15-23"><a href="#cb15-23"></a>  <span class="fu">lapply</span>(tadList, \(x, <span class="at">binSize =</span> <span class="fl">10e03</span>) {</span>
-<span id="cb15-24"><a href="#cb15-24"></a>  </span>
-<span id="cb15-25"><a href="#cb15-25"></a>    <span class="do">## Update the first anchor  </span></span>
-<span id="cb15-26"><a href="#cb15-26"></a>    newAnchor1 <span class="ot">&lt;-</span> </span>
-<span id="cb15-27"><a href="#cb15-27"></a>      <span class="fu">anchors</span>(x, <span class="st">'first'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-28"><a href="#cb15-28"></a>      <span class="fu">mutate</span>(<span class="at">end =</span> start <span class="sc">+</span> binSize)</span>
-<span id="cb15-29"><a href="#cb15-29"></a>  </span>
-<span id="cb15-30"><a href="#cb15-30"></a>    <span class="do">## Update the second anchor</span></span>
-<span id="cb15-31"><a href="#cb15-31"></a>    newAnchor2 <span class="ot">&lt;-</span> </span>
-<span id="cb15-32"><a href="#cb15-32"></a>      <span class="fu">anchors</span>(x, <span class="st">'second'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-33"><a href="#cb15-33"></a>      <span class="fu">mutate</span>(<span class="at">start =</span> end <span class="sc">-</span> binSize)</span>
-<span id="cb15-34"><a href="#cb15-34"></a>  </span>
-<span id="cb15-35"><a href="#cb15-35"></a>    <span class="do">## Form new GInteractions object</span></span>
-<span id="cb15-36"><a href="#cb15-36"></a>    <span class="fu">GInteractions</span>(<span class="at">anchor1 =</span> newAnchor1,</span>
-<span id="cb15-37"><a href="#cb15-37"></a>                  <span class="at">anchor2 =</span> newAnchor2,</span>
-<span id="cb15-38"><a href="#cb15-38"></a>                  <span class="at">name =</span> <span class="fu">paste0</span>(<span class="st">"TAD_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x)))</span>
-<span id="cb15-39"><a href="#cb15-39"></a>      </span>
-<span id="cb15-40"><a href="#cb15-40"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-4"><a href="#cb15-4"></a></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="do">## List loop files for each timepoint</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a>bedpeFiles <span class="ot">&lt;-</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>  <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"data/loops"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8"></a>             <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-9"><a href="#cb15-9"></a></span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="do">## Read in data and format as GInteractions</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a>giList <span class="ot">&lt;-</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a>  <span class="fu">lapply</span>(bedpeFiles, fread) <span class="sc">|&gt;</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a>  <span class="fu">lapply</span>(as_ginteractions) <span class="sc">|&gt;</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a>  <span class="fu">setNames</span>(<span class="fu">gsub</span>(<span class="st">"[^0-9]+"</span>, <span class="st">""</span>, bedpeFiles))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="prepare-the-data-1" class="slide level2 nonincremental">
+<section id="prepare-the-data-1" class="slide level2">
 <h2>Prepare the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" data-code-line-numbers="1-2"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="do">## View input data</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>giList</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>giList</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`0`
-GInteractions object with 10607 interactions and 1 metadata column:
+GInteractions object with 10204 interactions and 9 metadata columns:
           seqnames1             ranges1     seqnames2             ranges2 |
               &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-      [1]         9   42730000-42740000 ---         9   43255000-43265000 |
-      [2]         9   15730000-15740000 ---         9   17485000-17495000 |
-      [3]         9   84375000-84385000 ---         9   85600000-85610000 |
-      [4]         9   70740000-70750000 ---         9   71250000-71260000 |
-      [5]         9   63545000-63555000 ---         9   63905000-63915000 |
+      [1]      chr9   89605000-89610000 ---      chr9   89670000-89675000 |
+      [2]      chr9   27115000-27120000 ---      chr9   27270000-27275000 |
+      [3]      chr9   33405000-33410000 ---      chr9   33610000-33615000 |
+      [4]      chr9 108285000-108290000 ---      chr9 108560000-108565000 |
+      [5]      chr9 128655000-128660000 ---      chr9 128690000-128695000 |
       ...       ...                 ... ...       ...                 ... .
-  [10603]         8 102420000-102430000 ---         8 102515000-102525000 |
-  [10604]         8   22925000-22935000 ---         8   23005000-23015000 |
-  [10605]         8 130130000-130140000 ---         8 130180000-130190000 |
-  [10606]         8   11410000-11420000 ---         8   11465000-11475000 |
-  [10607]         8   93495000-93505000 ---         8   93550000-93560000 |
-                 name
-          &lt;character&gt;
-      [1]       TAD_1
-      [2]       TAD_2
-      [3]       TAD_3
-      [4]       TAD_4
-      [5]       TAD_5
-      ...         ...
-  [10603]   TAD_10603
-  [10604]   TAD_10604
-  [10605]   TAD_10605
-  [10606]   TAD_10606
-  [10607]   TAD_10607
+  [10200]     chr17   35970000-35975000 ---     chr17   36480000-36485000 |
+  [10201]     chr17   65275000-65280000 ---     chr17   66170000-66175000 |
+  [10202]     chr17   27350000-27355000 ---     chr17   27595000-27600000 |
+  [10203]     chr17   17370000-17375000 ---     chr17   17460000-17465000 |
+  [10204]     chr17   17355000-17360000 ---     chr17   17640000-17645000 |
+                color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+          &lt;character&gt;  &lt;numeric&gt;               &lt;numeric&gt;     &lt;numeric&gt;
+      [1]       0,0,0    2.06468                0.917966       1.43249
+      [2]       0,0,0    2.55654                0.983957       1.40194
+      [3]       0,0,0    2.55579                0.983745       1.67442
+      [4]       0,0,0    2.57163                0.943240       1.71112
+      [5]       0,0,0    1.83553                0.936212       1.35813
+      ...         ...        ...                     ...           ...
+  [10200]       0,0,0    8.69385                1.000000       5.89909
+  [10201]       0,0,0    3.48654                0.999539       2.41980
+  [10202]       0,0,0    3.01999                0.992171       2.19997
+  [10203]       0,0,0    2.76950                0.961080       2.16948
+  [10204]       0,0,0    7.66937                0.999996       3.88862
+          Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2       avg       std
+                       &lt;numeric&gt;              &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+      [1]               0.777091               0.807942   1.81013  0.425933
+      [2]               1.881285               1.975818   2.46068  0.806084
+      [3]               1.303592               1.568077   2.96105  0.677174
+      [4]               0.835542               1.082364   2.12652  0.537152
+      [5]               0.658496               0.789343   2.16715  0.272499
+      ...                    ...                    ...       ...       ...
+  [10200]               1.205008               1.883595   3.87843  0.532255
+  [10201]               2.271491               3.687016   8.06904  1.210339
+  [10202]               1.274382               2.298726   5.78719  0.665814
+  [10203]               0.716013               0.741013   2.61012  0.336476
+  [10204]               5.091658               7.040526   7.91967  1.723447
+              value
+          &lt;numeric&gt;
+      [1]   2.50088
+      [2]   4.13293
+      [3]   4.11980
+      [4]   2.86923
+      [5]   2.75248
+      ...       ...
+  [10200]   4.94954
+  [10201]  10.08814
+  [10202]   6.91998
+  [10203]   3.24658
+  [10204]  12.44559
   -------
-  regions: 20319 ranges and 0 metadata columns
-  seqinfo: 23 sequences from an unspecified genome; no seqlengths
+  regions: 17683 ranges and 0 metadata columns
+  seqinfo: 21 sequences from an unspecified genome; no seqlengths
 
 $`360`
-GInteractions object with 9651 interactions and 1 metadata column:
-         seqnames1             ranges1     seqnames2             ranges2 |
-             &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-     [1]         9   42730000-42740000 ---         9   43255000-43265000 |
-     [2]         9   28140000-28150000 ---         9   28465000-28475000 |
-     [3]         9   84375000-84385000 ---         9   85600000-85610000 |
-     [4]         9   27715000-27725000 ---         9   28075000-28085000 |
-     [5]         9   63545000-63555000 ---         9   63900000-63910000 |
-     ...       ...                 ... ...       ...                 ... .
-  [9647]         8   22925000-22935000 ---         8   23005000-23015000 |
-  [9648]         8 124750000-124760000 ---         8 124820000-124830000 |
-  [9649]         8   94720000-94730000 ---         8   94790000-94800000 |
-  [9650]         8 124650000-124660000 ---         8 124730000-124740000 |
-  [9651]         8 125235000-125245000 ---         8 125320000-125330000 |
-                name
-         &lt;character&gt;
-     [1]       TAD_1
-     [2]       TAD_2
-     [3]       TAD_3
-     [4]       TAD_4
-     [5]       TAD_5
-     ...         ...
-  [9647]    TAD_9647
-  [9648]    TAD_9648
-  [9649]    TAD_9649
-  [9650]    TAD_9650
-  [9651]    TAD_9651
+GInteractions object with 10563 interactions and 9 metadata columns:
+          seqnames1           ranges1     seqnames2           ranges2 |
+              &lt;Rle&gt;         &lt;IRanges&gt;         &lt;Rle&gt;         &lt;IRanges&gt; |
+      [1]      chr9 36105000-36110000 ---      chr9 36165000-36170000 |
+      [2]      chr9 33370000-33375000 ---      chr9 33705000-33710000 |
+      [3]      chr9 19500000-19505000 ---      chr9 19740000-19745000 |
+      [4]      chr9 28525000-28530000 ---      chr9 32090000-32095000 |
+      [5]      chr9 14460000-14465000 ---      chr9 14760000-14765000 |
+      ...       ...               ... ...       ...               ... .
+  [10559]     chr17 35165000-35170000 ---     chr17 35535000-35540000 |
+  [10560]     chr17 46940000-46945000 ---     chr17 47000000-47005000 |
+  [10561]     chr17 59315000-59320000 ---     chr17 59920000-59925000 |
+  [10562]     chr17 17355000-17360000 ---     chr17 17640000-17645000 |
+  [10563]     chr17 33780000-33785000 ---     chr17 33945000-33950000 |
+                color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+          &lt;character&gt;  &lt;numeric&gt;               &lt;numeric&gt;     &lt;numeric&gt;
+      [1]       0,0,0    1.96170                0.973668       1.43473
+      [2]       0,0,0    2.55982                0.986425       1.57297
+      [3]       0,0,0    2.72704                0.978201       1.69458
+      [4]       0,0,0    5.50624                0.999999       3.05943
+      [5]       0,0,0    3.92282                0.990343       2.62382
+      ...         ...        ...                     ...           ...
+  [10559]       0,0,0    3.61352                0.993416       2.55324
+  [10560]       0,0,0    2.40272                0.951612       1.95457
+  [10561]       0,0,0    2.47925                0.953740       1.71784
+  [10562]       0,0,0    4.96387                0.999717       3.20697
+  [10563]       0,0,0    3.70767                0.995413       2.31589
+          Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2       avg       std
+                       &lt;numeric&gt;              &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+      [1]               0.777205                1.13810   2.94650  0.426781
+      [2]               1.543407                1.81842   2.92802  1.010820
+      [3]               1.401216                1.56290   2.58078  1.052888
+      [4]               8.563278                9.44171  12.15307  3.918098
+      [5]               1.287969                1.75705   3.49569  0.873397
+      ...                    ...                    ...       ...       ...
+  [10559]               1.475400               1.565502   3.71220  0.674091
+  [10560]               0.348354               0.708525   2.71917  0.269916
+  [10561]               0.978716               0.985647   2.20383  0.491411
+  [10562]               2.140706               3.449179   6.26952  1.250420
+  [10563]               1.644693               2.336126   3.92308  0.895122
+              value
+          &lt;numeric&gt;
+      [1]   3.63735
+      [2]   4.29994
+      [3]   3.82630
+      [4]  19.76487
+      [5]   4.64055
+      ...       ...
+  [10559]   5.02366
+  [10560]   3.02882
+  [10561]   3.07380
+  [10562]   8.17238
+  [10563]   5.38503
   -------
-  regions: 18529 ranges and 0 metadata columns
-  seqinfo: 23 sequences from an unspecified genome; no seqlengths
+  regions: 18678 ranges and 0 metadata columns
+  seqinfo: 22 sequences from an unspecified genome; no seqlengths
 
 $`4320`
-GInteractions object with 12468 interactions and 1 metadata column:
-          seqnames1             ranges1     seqnames2             ranges2 |
-              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-      [1]         9   10030000-10040000 ---         9   12535000-12545000 |
-      [2]         9   42730000-42740000 ---         9   43255000-43265000 |
-      [3]         9   17515000-17525000 ---         9   18890000-18900000 |
-      [4]         9   15770000-15780000 ---         9   17475000-17485000 |
-      [5]         9   73200000-73210000 ---         9   74670000-74680000 |
-      ...       ...                 ... ...       ...                 ... .
-  [12464]         8 130435000-130445000 ---         8 130510000-130520000 |
-  [12465]         8 124755000-124765000 ---         8 124830000-124840000 |
-  [12466]         8 129940000-129950000 ---         8 130005000-130015000 |
-  [12467]         8     2730000-2740000 ---         8     2790000-2800000 |
-  [12468]         8   97645000-97655000 ---         8   97710000-97720000 |
-                 name
-          &lt;character&gt;
-      [1]       TAD_1
-      [2]       TAD_2
-      [3]       TAD_3
-      [4]       TAD_4
-      [5]       TAD_5
-      ...         ...
-  [12464]   TAD_12464
-  [12465]   TAD_12465
-  [12466]   TAD_12466
-  [12467]   TAD_12467
-  [12468]   TAD_12468
+GInteractions object with 15338 interactions and 9 metadata columns:
+          seqnames1           ranges1     seqnames2             ranges2 |
+              &lt;Rle&gt;         &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+      [1]      chr9 14460000-14465000 ---      chr9   14765000-14770000 |
+      [2]      chr9 75110000-75115000 ---      chr9   75175000-75180000 |
+      [3]      chr9 99180000-99185000 ---      chr9 100590000-100595000 |
+      [4]      chr9 96855000-96860000 ---      chr9   97390000-97395000 |
+      [5]      chr9 84315000-84320000 ---      chr9   84385000-84390000 |
+      ...       ...               ... ...       ...                 ... .
+  [15334]     chr17 33780000-33785000 ---     chr17   34015000-34020000 |
+  [15335]     chr17   2825000-2830000 ---     chr17     3450000-3455000 |
+  [15336]     chr17 17355000-17360000 ---     chr17   17640000-17645000 |
+  [15337]     chr17 48800000-48805000 ---     chr17   48880000-48885000 |
+  [15338]     chr17 33780000-33785000 ---     chr17   33945000-33950000 |
+                color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+          &lt;character&gt;  &lt;numeric&gt;               &lt;numeric&gt;     &lt;numeric&gt;
+      [1]       0,0,0    4.58610                0.998150       3.34278
+      [2]       0,0,0    2.31151                0.940716       1.70304
+      [3]       0,0,0    4.46335                0.998697       3.03694
+      [4]       0,0,0    6.01059                0.999624       3.96528
+      [5]       0,0,0    2.42940                0.927548       1.60290
+      ...         ...        ...                     ...           ...
+  [15334]       0,0,0    2.50723                0.984298       1.62083
+  [15335]       0,0,0    2.69349                0.983494       1.73560
+  [15336]       0,0,0    5.51288                0.999499       3.33775
+  [15337]       0,0,0    4.25762                0.990069       2.82033
+  [15338]       0,0,0    3.93666                0.993367       2.45104
+          Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2       avg       std
+                       &lt;numeric&gt;              &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+      [1]               1.401681               1.964919   5.04712  0.847931
+      [2]               0.681218               0.821609   2.22017  0.382182
+      [3]               1.721599               2.456924   5.11379  0.806729
+      [4]               2.645426               2.870886   5.53576  1.282828
+      [5]               0.817292               0.986790   1.89862  0.400903
+      ...                    ...                    ...       ...       ...
+  [15334]                1.44989                1.56994   2.86559  0.592246
+  [15335]                1.17808                1.69171   3.05729  0.862022
+  [15336]                2.13406                3.61844   5.70327  1.184972
+  [15337]                1.23694                1.81455   3.51310  0.692860
+  [15338]                1.73929                2.08819   3.47014  0.742591
+              value
+          &lt;numeric&gt;
+      [1]   6.29306
+      [2]   2.82570
+      [3]   6.64410
+      [4]   7.88725
+      [5]   2.62511
+      ...       ...
+  [15334]   4.15438
+  [15335]   4.10447
+  [15336]   7.60021
+  [15337]   4.61261
+  [15338]   5.01617
   -------
-  regions: 23800 ranges and 0 metadata columns
-  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+  regions: 25431 ranges and 0 metadata columns
+  seqinfo: 22 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
 </div>
 </section>
@@ -1203,22 +1254,22 @@ GInteractions object with 12468 interactions and 1 metadata column:
 <div class="fragment">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>MergedGInteractions object with 20007 interactions and 0 metadata columns:
+<pre><code>MergedGInteractions object with 25367 interactions and 0 metadata columns:
           seqnames1             ranges1     seqnames2             ranges2
               &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt;
-      [1]         9   15730000-15740000 ---         9   17485000-17495000
-      [2]         9     1065000-1075000 ---         9     1825000-1835000
-      [3]         9   68375000-68385000 ---         9   68545000-68555000
-      [4]         9   92255000-92265000 ---         9   92810000-92820000
-      [5]         9 116865000-116875000 ---         9 117520000-117530000
+      [1]      chr9   89605000-89610000 ---      chr9   89670000-89675000
+      [2]      chr9   27115000-27120000 ---      chr9   27270000-27275000
+      [3]      chr9   33405000-33410000 ---      chr9   33610000-33615000
+      [4]      chr9 128655000-128660000 ---      chr9 128690000-128695000
+      [5]      chr9 136670000-136675000 ---      chr9 136715000-136720000
       ...       ...                 ... ...       ...                 ...
-  [20003]         8   79765000-79775000 ---         8   79870000-79880000
-  [20004]         8 124847500-124857500 ---         8 124987500-124997500
-  [20005]         8   80602500-80612500 ---         8   80677500-80687500
-  [20006]         8 125335000-125345000 ---         8 125415000-125425000
-  [20007]         8   38985000-38995000 ---         8   39090000-39100000
+  [25363]     chr17   65290000-65295000 ---     chr17   65555000-65560000
+  [25364]     chr17   27657500-27662500 ---     chr17   27875000-27880000
+  [25365]     chr17   29370000-29375000 ---     chr17   29530000-29535000
+  [25366]     chr17   77537500-77542500 ---     chr17   78010000-78015000
+  [25367]     chr17     7910000-7915000 ---     chr17     7985000-7990000
   -------
-  regions: 36450 ranges and 0 metadata columns
+  regions: 41113 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
 </div>
@@ -1236,91 +1287,127 @@ GInteractions object with 12468 interactions and 1 metadata column:
 <span id="cb22-2"><a href="#cb22-2"></a><span class="fu">tail</span>(mgi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>MergedGInteractions object with 6 interactions and 0 metadata columns:
-      seqnames1             ranges1     seqnames2             ranges2
-          &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt;
-  [1]         8   93990000-94000000 ---         8   94065000-94075000
-  [2]         8   79765000-79775000 ---         8   79870000-79880000
-  [3]         8 124847500-124857500 ---         8 124987500-124997500
-  [4]         8   80602500-80612500 ---         8   80677500-80687500
-  [5]         8 125335000-125345000 ---         8 125415000-125425000
-  [6]         8   38985000-38995000 ---         8   39090000-39100000
+      seqnames1           ranges1     seqnames2           ranges2
+          &lt;Rle&gt;         &lt;IRanges&gt;         &lt;Rle&gt;         &lt;IRanges&gt;
+  [1]     chr17 68250000-68255000 ---     chr17 68757500-68762500
+  [2]     chr17 65290000-65295000 ---     chr17 65555000-65560000
+  [3]     chr17 27657500-27662500 ---     chr17 27875000-27880000
+  [4]     chr17 29370000-29375000 ---     chr17 29530000-29535000
+  [5]     chr17 77537500-77542500 ---     chr17 78010000-78015000
+  [6]     chr17   7910000-7915000 ---     chr17   7985000-7990000
   -------
-  regions: 36450 ranges and 0 metadata columns
+  regions: 41113 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb24" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">getPairClusters</span>(<span class="fu">tail</span>(mgi))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
    seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
-1:         8 93990000 94000000  10001       *         8 94065000 94075000
-2:         8 93990000 94000000  10001       *         8 94065000 94075000
-   width2 strand2      name  src
-1:  10001       *  TAD_9593  360
-2:  10001       * TAD_12157 4320
+1:     chr17 68250000 68255000   5001       *     chr17 68757500 68762500
+2:     chr17 68250000 68255000   5001       *     chr17 68757500 68762500
+   width2 strand2 color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+1:   5001       * 0,0,0   3.283172               0.9775382      2.183511
+2:   5001       * 0,0,0   3.766162               0.9794906      2.477963
+   Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2      avg       std    value
+1:               1.267313               1.353121 2.669831 0.6812279 3.796332
+2:               1.154502               1.500289 2.861052 0.4824793 3.887276
+    src
+1:  360
+2: 4320
 
 [[2]]
    seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
-1:         8 79765000 79775000  10001       *         8 79870000 79880000
-2:         8 79765000 79775000  10001       *         8 79870000 79880000
-   width2 strand2      name  src
-1:  10001       *  TAD_9605  360
-2:  10001       * TAD_12405 4320
+1:     chr17 65290000 65295000   5001       *     chr17 65555000 65560000
+2:     chr17 65290000 65295000   5001       *     chr17 65555000 65560000
+   width2 strand2 color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+1:   5001       * 0,0,0   2.301621               0.9782407      1.811257
+2:   5001       * 0,0,0   4.184173               0.9985222      2.732198
+   Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2      avg       std    value
+1:              0.5883462              0.9801798 3.305139 0.3782773 3.828114
+2:              1.7415318              2.6633184 4.969868 0.9183704 6.517896
+    src
+1:  360
+2: 4320
 
 [[3]]
-   seqnames1    start1      end1 width1 strand1 seqnames2    start2      end2
-1:         8 124847500 124857500  10001       *         8 124987500 124997500
-2:         8 124847500 124857500  10001       *         8 124987500 124997500
-   width2 strand2      name  src
-1:  10001       *  TAD_9617  360
-2:  10001       * TAD_12264 4320
+   seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
+1:     chr17 27657500 27662500   5001       *     chr17 27875000 27880000
+2:     chr17 27657500 27662500   5001       *     chr17 27875000 27880000
+   width2 strand2 color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+1:   5001       * 0,0,0   3.730618                0.978591      2.377280
+2:   5001       * 0,0,0   4.236078                1.000000      2.490079
+   Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2      avg       std    value
+1:               1.079278               1.639414 2.884983 0.5946189 3.844341
+2:               1.224047               1.691289 2.488413 0.6791529 3.576455
+    src
+1:  360
+2: 4320
 
 [[4]]
    seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
-1:         8 80602500 80612500  10001       *         8 80677500 80687500
-2:         8 80602500 80612500  10001       *         8 80677500 80687500
-   width2 strand2      name  src
-1:  10001       *  TAD_9623  360
-2:  10001       * TAD_12283 4320
+1:     chr17 29370000 29375000   5001       *     chr17 29530000 29535000
+2:     chr17 29370000 29375000   5001       *     chr17 29530000 29535000
+   width2 strand2 color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+1:   5001       * 0,0,0   2.526620               0.9829903      1.893225
+2:   5001       * 0,0,0   2.970785               0.9883910      2.120753
+   Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2      avg       std    value
+1:              0.8547273               1.168578 3.314633 0.3949473 4.074391
+2:              1.0702407               1.457258 3.505113 0.5895870 4.456438
+    src
+1:  360
+2: 4320
 
 [[5]]
-   seqnames1    start1      end1 width1 strand1 seqnames2    start2      end2
-1:         8 125335000 125345000  10001       *         8 125415000 125425000
-2:         8 125335000 125345000  10001       *         8 125415000 125425000
-   width2 strand2      name  src
-1:  10001       *  TAD_9628  360
-2:  10001       * TAD_12360 4320
+   seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
+1:     chr17 77537500 77542500   5001       *     chr17 78010000 78015000
+2:     chr17 77537500 77542500   5001       *     chr17 78010000 78015000
+   width2 strand2 color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+1:   5001       * 0,0,0   3.200017               0.9959567      2.346039
+2:   5001       * 0,0,0   3.623490               0.9977793      2.309720
+   Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2      avg       std    value
+1:               1.401516               1.597327 4.265478 0.7819768 5.511270
+2:               1.775418               2.574010 4.532385 0.7181578 6.110535
+    src
+1:  360
+2: 4320
 
 [[6]]
-   seqnames1   start1     end1 width1 strand1 seqnames2   start2     end2
-1:         8 38985000 38995000  10001       *         8 39090000 39100000
-2:         8 38985000 38995000  10001       *         8 39090000 39100000
-   width2 strand2      name  src
-1:  10001       *  TAD_9630  360
-2:  10001       * TAD_12434 4320</code></pre>
+   seqnames1  start1    end1 width1 strand1 seqnames2  start2    end2 width2
+1:     chr17 7910000 7915000   5001       *     chr17 7985000 7990000   5001
+2:     chr17 7910000 7915000   5001       *     chr17 7985000 7990000   5001
+   strand2 color APScoreAvg ProbabilityofEnrichment RegAPScoreAvg
+1:       * 0,0,0   2.404220               0.9907429      1.626797
+2:       * 0,0,0   2.427026               0.9866196      1.642203
+   Avg_diffMaxNeihgboor_1 Avg_diffMaxNeihgboor_2      avg       std    value
+1:               1.340799               1.695594 3.491029 0.6438525 4.682849
+2:               1.045785               1.657023 3.384829 0.4991671 4.314417
+    src
+1:  360
+2: 4320</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb26" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="do">## Let's recover TAD names</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>mgi <span class="ot">&lt;-</span> <span class="fu">aggPairMcols</span>(mgi, <span class="at">columns =</span> <span class="st">"name"</span>, <span class="at">funs =</span> <span class="st">"list"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a>mgi <span class="ot">&lt;-</span> <span class="fu">aggPairMcols</span>(mgi, <span class="at">columns =</span> <span class="st">"APScoreAvg"</span>, <span class="at">funs =</span> <span class="st">"mean"</span>)</span>
 <span id="cb26-3"><a href="#cb26-3"></a><span class="fu">tail</span>(mgi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>MergedGInteractions object with 6 interactions and 1 metadata column:
-      seqnames1             ranges1     seqnames2             ranges2 |
-          &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-  [1]         8   93990000-94000000 ---         8   94065000-94075000 |
-  [2]         8   79765000-79775000 ---         8   79870000-79880000 |
-  [3]         8 124847500-124857500 ---         8 124987500-124997500 |
-  [4]         8   80602500-80612500 ---         8   80677500-80687500 |
-  [5]         8 125335000-125345000 ---         8 125415000-125425000 |
-  [6]         8   38985000-38995000 ---         8   39090000-39100000 |
-               list.name
-                  &lt;list&gt;
-  [1] TAD_9593,TAD_12157
-  [2] TAD_9605,TAD_12405
-  [3] TAD_9617,TAD_12264
-  [4] TAD_9623,TAD_12283
-  [5] TAD_9628,TAD_12360
-  [6] TAD_9630,TAD_12434
+      seqnames1           ranges1     seqnames2           ranges2 |
+          &lt;Rle&gt;         &lt;IRanges&gt;         &lt;Rle&gt;         &lt;IRanges&gt; |
+  [1]     chr17 68250000-68255000 ---     chr17 68757500-68762500 |
+  [2]     chr17 65290000-65295000 ---     chr17 65555000-65560000 |
+  [3]     chr17 27657500-27662500 ---     chr17 27875000-27880000 |
+  [4]     chr17 29370000-29375000 ---     chr17 29530000-29535000 |
+  [5]     chr17 77537500-77542500 ---     chr17 78010000-78015000 |
+  [6]     chr17   7910000-7915000 ---     chr17   7985000-7990000 |
+      mean.APScoreAvg
+            &lt;numeric&gt;
+  [1]         3.52467
+  [2]         3.24290
+  [3]         3.98335
+  [4]         2.74870
+  [5]         3.41175
+  [6]         2.41562
   -------
-  regions: 36450 ranges and 0 metadata columns
+  regions: 41113 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
 </div>
@@ -1333,139 +1420,139 @@ GInteractions object with 12468 interactions and 1 metadata column:
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "0"    "360"  "4320"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="do">## Subsetting TADs by source</span></span>
+<div class="sourceCode cell-code" id="cb30" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="do">## Subsetting loops by source</span></span>
 <span id="cb30-2"><a href="#cb30-2"></a><span class="fu">subsetBySource</span>(mgi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`0`
-MergedGInteractions object with 3407 interactions and 1 metadata column:
+MergedGInteractions object with 4425 interactions and 1 metadata column:
          seqnames1             ranges1     seqnames2             ranges2 |
              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-     [1]         9   15730000-15740000 ---         9   17485000-17495000 |
-     [2]         9     1065000-1075000 ---         9     1825000-1835000 |
-     [3]         9   68375000-68385000 ---         9   68545000-68555000 |
-     [4]         9   92255000-92265000 ---         9   92810000-92820000 |
-     [5]         9 116865000-116875000 ---         9 117520000-117530000 |
+     [1]      chr9   89605000-89610000 ---      chr9   89670000-89675000 |
+     [2]      chr9   27115000-27120000 ---      chr9   27270000-27275000 |
+     [3]      chr9   33405000-33410000 ---      chr9   33610000-33615000 |
+     [4]      chr9 128655000-128660000 ---      chr9 128690000-128695000 |
+     [5]      chr9 136670000-136675000 ---      chr9 136715000-136720000 |
      ...       ...                 ... ...       ...                 ... .
-  [3403]         8   38985000-38995000 ---         8   39055000-39065000 |
-  [3404]         8 102420000-102430000 ---         8 102515000-102525000 |
-  [3405]         8 130130000-130140000 ---         8 130180000-130190000 |
-  [3406]         8   11410000-11420000 ---         8   11465000-11475000 |
-  [3407]         8   93495000-93505000 ---         8   93550000-93560000 |
-         list.name
-            &lt;list&gt;
-     [1]     TAD_2
-     [2]     TAD_6
-     [3]    TAD_10
-     [4]    TAD_11
-     [5]    TAD_12
-     ...       ...
-  [3403] TAD_10601
-  [3404] TAD_10603
-  [3405] TAD_10605
-  [3406] TAD_10606
-  [3407] TAD_10607
+  [4421]     chr17   28970000-28975000 ---     chr17   29215000-29220000 |
+  [4422]     chr17   37525000-37530000 ---     chr17   37785000-37790000 |
+  [4423]     chr17   36490000-36495000 ---     chr17   36525000-36530000 |
+  [4424]     chr17   35970000-35975000 ---     chr17   36480000-36485000 |
+  [4425]     chr17   17370000-17375000 ---     chr17   17460000-17465000 |
+         mean.APScoreAvg
+               &lt;numeric&gt;
+     [1]         2.06468
+     [2]         2.55654
+     [3]         2.55579
+     [4]         1.83553
+     [5]         1.85282
+     ...             ...
+  [4421]         2.84342
+  [4422]         2.49312
+  [4423]         3.05257
+  [4424]         8.69385
+  [4425]         2.76950
   -------
-  regions: 36450 ranges and 0 metadata columns
+  regions: 41113 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths
 
 $`360`
-MergedGInteractions object with 2684 interactions and 1 metadata column:
+MergedGInteractions object with 4635 interactions and 1 metadata column:
          seqnames1             ranges1     seqnames2             ranges2 |
              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-     [1]         9   28140000-28150000 ---         9   28465000-28475000 |
-     [2]         9   27715000-27725000 ---         9   28075000-28085000 |
-     [3]         9     1065000-1075000 ---         9     1790000-1800000 |
-     [4]         9 105910000-105920000 ---         9 107085000-107095000 |
-     [5]         9 137790000-137800000 ---         9 138205000-138215000 |
+     [1]      chr9   33370000-33375000 ---      chr9   33705000-33710000 |
+     [2]      chr9   19500000-19505000 ---      chr9   19740000-19745000 |
+     [3]      chr9   28525000-28530000 ---      chr9   32090000-32095000 |
+     [4]      chr9 114405000-114410000 ---      chr9 114915000-114920000 |
+     [5]      chr9     6060000-6065000 ---      chr9     6575000-6580000 |
      ...       ...                 ... ...       ...                 ... .
-  [2680]         8   81660000-81670000 ---         8   81730000-81740000 |
-  [2681]         8 133565000-133575000 ---         8 133645000-133655000 |
-  [2682]         8 124750000-124760000 ---         8 124820000-124830000 |
-  [2683]         8 124650000-124660000 ---         8 124730000-124740000 |
-  [2684]         8 125235000-125245000 ---         8 125320000-125330000 |
-         list.name
-            &lt;list&gt;
-     [1]     TAD_2
-     [2]     TAD_4
-     [3]     TAD_7
-     [4]     TAD_8
-     [5]    TAD_10
-     ...       ...
-  [2680]  TAD_9642
-  [2681]  TAD_9645
-  [2682]  TAD_9648
-  [2683]  TAD_9650
-  [2684]  TAD_9651
+  [4631]     chr17     7270000-7275000 ---     chr17     7345000-7350000 |
+  [4632]     chr17   18135000-18140000 ---     chr17   18355000-18360000 |
+  [4633]     chr17   38590000-38595000 ---     chr17   38655000-38660000 |
+  [4634]     chr17   46940000-46945000 ---     chr17   47000000-47005000 |
+  [4635]     chr17   59315000-59320000 ---     chr17   59920000-59925000 |
+         mean.APScoreAvg
+               &lt;numeric&gt;
+     [1]         2.55982
+     [2]         2.72704
+     [3]         5.50624
+     [4]         2.74619
+     [5]         2.69432
+     ...             ...
+  [4631]         2.47831
+  [4632]         4.12110
+  [4633]         2.03401
+  [4634]         2.40272
+  [4635]         2.47925
   -------
-  regions: 36450 ranges and 0 metadata columns
+  regions: 41113 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths
 
 $`4320`
-MergedGInteractions object with 5766 interactions and 1 metadata column:
+MergedGInteractions object with 8698 interactions and 1 metadata column:
          seqnames1             ranges1     seqnames2             ranges2 |
              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-     [1]         9   10030000-10040000 ---         9   12535000-12545000 |
-     [2]         9   17515000-17525000 ---         9   18890000-18900000 |
-     [3]         9   15770000-15780000 ---         9   17475000-17485000 |
-     [4]         9   73200000-73210000 ---         9   74670000-74680000 |
-     [5]         9   27720000-27730000 ---         9   28065000-28075000 |
+     [1]      chr9   75110000-75115000 ---      chr9   75175000-75180000 |
+     [2]      chr9   99180000-99185000 ---      chr9 100590000-100595000 |
+     [3]      chr9   84315000-84320000 ---      chr9   84385000-84390000 |
+     [4]      chr9 116300000-116305000 ---      chr9 116485000-116490000 |
+     [5]      chr9 114910000-114915000 ---      chr9 115010000-115015000 |
      ...       ...                 ... ...       ...                 ... .
-  [5762]         8   95520000-95530000 ---         8   95605000-95615000 |
-  [5763]         8 130435000-130445000 ---         8 130510000-130520000 |
-  [5764]         8 124755000-124765000 ---         8 124830000-124840000 |
-  [5765]         8     2730000-2740000 ---         8     2790000-2800000 |
-  [5766]         8   97645000-97655000 ---         8   97710000-97720000 |
-         list.name
-            &lt;list&gt;
-     [1]     TAD_1
-     [2]     TAD_3
-     [3]     TAD_4
-     [4]     TAD_5
-     [5]     TAD_7
-     ...       ...
-  [5762] TAD_12463
-  [5763] TAD_12464
-  [5764] TAD_12465
-  [5765] TAD_12467
-  [5766] TAD_12468
+  [8694]     chr17   68915000-68920000 ---     chr17   69230000-69235000 |
+  [8695]     chr17   30565000-30570000 ---     chr17   30700000-30705000 |
+  [8696]     chr17   29585000-29590000 ---     chr17   30085000-30090000 |
+  [8697]     chr17   33780000-33785000 ---     chr17   34015000-34020000 |
+  [8698]     chr17     2825000-2830000 ---     chr17     3450000-3455000 |
+         mean.APScoreAvg
+               &lt;numeric&gt;
+     [1]         2.31151
+     [2]         4.46335
+     [3]         2.42940
+     [4]         2.11791
+     [5]         4.01746
+     ...             ...
+  [8694]         2.14816
+  [8695]         2.63569
+  [8696]         3.84359
+  [8697]         2.50723
+  [8698]         2.69349
   -------
-  regions: 36450 ranges and 0 metadata columns
+  regions: 41113 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="do">## Transient TADs</span></span>
+<div class="sourceCode cell-code" id="cb32" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="do">## Transient loops</span></span>
 <span id="cb32-2"><a href="#cb32-2"></a><span class="fu">subsetBySource</span>(<span class="at">x =</span> mgi,</span>
 <span id="cb32-3"><a href="#cb32-3"></a>               <span class="at">include =</span> <span class="st">"360"</span>,</span>
 <span id="cb32-4"><a href="#cb32-4"></a>               <span class="at">exclude =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"4320"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>MergedGInteractions object with 2684 interactions and 1 metadata column:
+<pre><code>MergedGInteractions object with 4635 interactions and 1 metadata column:
          seqnames1             ranges1     seqnames2             ranges2 |
              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-     [1]         9   28140000-28150000 ---         9   28465000-28475000 |
-     [2]         9   27715000-27725000 ---         9   28075000-28085000 |
-     [3]         9     1065000-1075000 ---         9     1790000-1800000 |
-     [4]         9 105910000-105920000 ---         9 107085000-107095000 |
-     [5]         9 137790000-137800000 ---         9 138205000-138215000 |
+     [1]      chr9   33370000-33375000 ---      chr9   33705000-33710000 |
+     [2]      chr9   19500000-19505000 ---      chr9   19740000-19745000 |
+     [3]      chr9   28525000-28530000 ---      chr9   32090000-32095000 |
+     [4]      chr9 114405000-114410000 ---      chr9 114915000-114920000 |
+     [5]      chr9     6060000-6065000 ---      chr9     6575000-6580000 |
      ...       ...                 ... ...       ...                 ... .
-  [2680]         8   81660000-81670000 ---         8   81730000-81740000 |
-  [2681]         8 133565000-133575000 ---         8 133645000-133655000 |
-  [2682]         8 124750000-124760000 ---         8 124820000-124830000 |
-  [2683]         8 124650000-124660000 ---         8 124730000-124740000 |
-  [2684]         8 125235000-125245000 ---         8 125320000-125330000 |
-         list.name
-            &lt;list&gt;
-     [1]     TAD_2
-     [2]     TAD_4
-     [3]     TAD_7
-     [4]     TAD_8
-     [5]    TAD_10
-     ...       ...
-  [2680]  TAD_9642
-  [2681]  TAD_9645
-  [2682]  TAD_9648
-  [2683]  TAD_9650
-  [2684]  TAD_9651
+  [4631]     chr17     7270000-7275000 ---     chr17     7345000-7350000 |
+  [4632]     chr17   18135000-18140000 ---     chr17   18355000-18360000 |
+  [4633]     chr17   38590000-38595000 ---     chr17   38655000-38660000 |
+  [4634]     chr17   46940000-46945000 ---     chr17   47000000-47005000 |
+  [4635]     chr17   59315000-59320000 ---     chr17   59920000-59925000 |
+         mean.APScoreAvg
+               &lt;numeric&gt;
+     [1]         2.55982
+     [2]         2.72704
+     [3]         5.50624
+     [4]         2.74619
+     [5]         2.69432
+     ...             ...
+  [4631]         2.47831
+  [4632]         4.12110
+  [4633]         2.03401
+  [4634]         2.40272
+  [4635]         2.47925
   -------
-  regions: 36450 ranges and 0 metadata columns
+  regions: 41113 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb34" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="do">## De novo (must be in 72 but not in 0)</span></span>
@@ -1475,66 +1562,82 @@ MergedGInteractions object with 5766 interactions and 1 metadata column:
 <span id="cb34-5"><a href="#cb34-5"></a>                 <span class="at">exclude =</span> <span class="st">"0"</span>)</span>
 <span id="cb34-6"><a href="#cb34-6"></a>deNovo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>MergedGInteractions object with 6716 interactions and 1 metadata column:
-         seqnames1             ranges1     seqnames2             ranges2 |
-             &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
-     [1]         9   10030000-10040000 ---         9   12535000-12545000 |
-     [2]         9   17515000-17525000 ---         9   18890000-18900000 |
-     [3]         9   15770000-15780000 ---         9   17475000-17485000 |
-     [4]         9   73200000-73210000 ---         9   74670000-74680000 |
-     [5]         9   27720000-27730000 ---         9   28065000-28075000 |
-     ...       ...                 ... ...       ...                 ... .
-  [6712]         8   79765000-79775000 ---         8   79870000-79880000 |
-  [6713]         8 124847500-124857500 ---         8 124987500-124997500 |
-  [6714]         8   80602500-80612500 ---         8   80677500-80687500 |
-  [6715]         8 125335000-125345000 ---         8 125415000-125425000 |
-  [6716]         8   38985000-38995000 ---         8   39090000-39100000 |
-                  list.name
-                     &lt;list&gt;
-     [1]              TAD_1
-     [2]              TAD_3
-     [3]              TAD_4
-     [4]              TAD_5
-     [5]              TAD_7
-     ...                ...
-  [6712] TAD_9605,TAD_12405
-  [6713] TAD_9617,TAD_12264
-  [6714] TAD_9623,TAD_12283
-  [6715] TAD_9628,TAD_12360
-  [6716] TAD_9630,TAD_12434
+<pre><code>MergedGInteractions object with 10528 interactions and 1 metadata column:
+          seqnames1             ranges1     seqnames2             ranges2 |
+              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+      [1]      chr9   75110000-75115000 ---      chr9   75175000-75180000 |
+      [2]      chr9   99180000-99185000 ---      chr9 100590000-100595000 |
+      [3]      chr9   84315000-84320000 ---      chr9   84385000-84390000 |
+      [4]      chr9 116300000-116305000 ---      chr9 116485000-116490000 |
+      [5]      chr9 114910000-114915000 ---      chr9 115010000-115015000 |
+      ...       ...                 ... ...       ...                 ... .
+  [10524]     chr17   65290000-65295000 ---     chr17   65555000-65560000 |
+  [10525]     chr17   27657500-27662500 ---     chr17   27875000-27880000 |
+  [10526]     chr17   29370000-29375000 ---     chr17   29530000-29535000 |
+  [10527]     chr17   77537500-77542500 ---     chr17   78010000-78015000 |
+  [10528]     chr17     7910000-7915000 ---     chr17     7985000-7990000 |
+          mean.APScoreAvg
+                &lt;numeric&gt;
+      [1]         2.31151
+      [2]         4.46335
+      [3]         2.42940
+      [4]         2.11791
+      [5]         4.01746
+      ...             ...
+  [10524]         3.24290
+  [10525]         3.98335
+  [10526]         2.74870
+  [10527]         3.41175
+  [10528]         2.41562
   -------
-  regions: 36450 ranges and 0 metadata columns
+  regions: 41113 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
 </div>
 </section>
-<section id="transform-de-novo-tads-for-visualization" class="slide level2">
-<h2>Transform <em>de novo</em> TADs for visualization</h2>
+<section id="format-for-visualization" class="slide level2">
+<h2>Format for visualization</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="do">## Assign to Hi-C bins</span></span>
 <span id="cb36-2"><a href="#cb36-2"></a>deNovo <span class="ot">&lt;-</span> </span>
 <span id="cb36-3"><a href="#cb36-3"></a>  <span class="fu">binPairs</span>(<span class="at">x =</span> deNovo,</span>
 <span id="cb36-4"><a href="#cb36-4"></a>           <span class="at">binSize =</span> <span class="fl">10e03</span>)</span>
 <span id="cb36-5"><a href="#cb36-5"></a></span>
-<span id="cb36-6"><a href="#cb36-6"></a><span class="do">## Reassemble TADs</span></span>
-<span id="cb36-7"><a href="#cb36-7"></a>anchor1 <span class="ot">&lt;-</span> <span class="fu">anchors</span>(deNovo, <span class="st">"first"</span>)</span>
-<span id="cb36-8"><a href="#cb36-8"></a>anchor2 <span class="ot">&lt;-</span> <span class="fu">anchors</span>(deNovo, <span class="st">"second"</span>)</span>
-<span id="cb36-9"><a href="#cb36-9"></a>deNovoTads <span class="ot">&lt;-</span> </span>
-<span id="cb36-10"><a href="#cb36-10"></a>  <span class="fu">GRanges</span>(<span class="at">seqnames =</span> <span class="fu">seqnames</span>(anchor1),</span>
-<span id="cb36-11"><a href="#cb36-11"></a>          <span class="at">ranges =</span> <span class="fu">IRanges</span>(<span class="at">start =</span> <span class="fu">start</span>(anchor1),</span>
-<span id="cb36-12"><a href="#cb36-12"></a>                           <span class="at">end =</span> <span class="fu">end</span>(anchor2)))</span>
-<span id="cb36-13"><a href="#cb36-13"></a><span class="fu">head</span>(deNovoTads)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-6"><a href="#cb36-6"></a><span class="do">## Change chromosome style</span></span>
+<span id="cb36-7"><a href="#cb36-7"></a><span class="fu">library</span>(<span class="at">package =</span> <span class="st">"GenomeInfoDb"</span>,</span>
+<span id="cb36-8"><a href="#cb36-8"></a>        <span class="at">include.only =</span> <span class="st">"seqlevelsStyle"</span>)</span>
+<span id="cb36-9"><a href="#cb36-9"></a><span class="fu">seqlevelsStyle</span>(deNovo) <span class="ot">&lt;-</span> <span class="st">"ENSEMBL"</span></span>
+<span id="cb36-10"><a href="#cb36-10"></a>deNovo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>GRanges object with 6 ranges and 0 metadata columns:
-      seqnames            ranges strand
-         &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt;
-  [1]        9 10030000-12550000      *
-  [2]        9 17520000-18900000      *
-  [3]        9 15770000-17490000      *
-  [4]        9 73200000-74680000      *
-  [5]        9 27720000-28080000      *
-  [6]        9   1040000-1880000      *
+<pre><code>GInteractions object with 10528 interactions and 1 metadata column:
+          seqnames1             ranges1     seqnames2             ranges2 |
+              &lt;Rle&gt;           &lt;IRanges&gt;         &lt;Rle&gt;           &lt;IRanges&gt; |
+      [1]         9   75110000-75120000 ---         9   75170000-75180000 |
+      [2]         9   99180000-99190000 ---         9 100590000-100600000 |
+      [3]         9   84310000-84320000 ---         9   84380000-84390000 |
+      [4]         9 116300000-116310000 ---         9 116480000-116490000 |
+      [5]         9 114910000-114920000 ---         9 115010000-115020000 |
+      ...       ...                 ... ...       ...                 ... .
+  [10524]        17   65290000-65300000 ---        17   65550000-65560000 |
+  [10525]        17   27660000-27670000 ---        17   27870000-27880000 |
+  [10526]        17   29370000-29380000 ---        17   29530000-29540000 |
+  [10527]        17   77540000-77550000 ---        17   78010000-78020000 |
+  [10528]        17     7910000-7920000 ---        17     7980000-7990000 |
+          mean.APScoreAvg
+                &lt;numeric&gt;
+      [1]         2.31151
+      [2]         4.46335
+      [3]         2.42940
+      [4]         2.11791
+      [5]         4.01746
+      ...             ...
+  [10524]         3.24290
+  [10525]         3.98335
+  [10526]         2.74870
+  [10527]         3.41175
+  [10528]         2.41562
   -------
+  regions: 17128 ranges and 0 metadata columns
   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
 </div>
@@ -1550,10 +1653,10 @@ MergedGInteractions object with 5766 interactions and 1 metadata column:
 <span id="cb38-6"><a href="#cb38-6"></a>              </span>
 <span id="cb38-7"><a href="#cb38-7"></a>             <span class="do">## Define region of interest</span></span>
 <span id="cb38-8"><a href="#cb38-8"></a>             <span class="at">chrom =</span> <span class="st">"7"</span>,</span>
-<span id="cb38-9"><a href="#cb38-9"></a>             <span class="at">chromstart =</span> <span class="dv">54490000</span>,</span>
-<span id="cb38-10"><a href="#cb38-10"></a>             <span class="at">chromend =</span> <span class="dv">56130000</span>,</span>
+<span id="cb38-9"><a href="#cb38-9"></a>             <span class="at">chromstart =</span> <span class="dv">54660000</span>,</span>
+<span id="cb38-10"><a href="#cb38-10"></a>             <span class="at">chromend =</span> <span class="dv">55350000</span>,</span>
 <span id="cb38-11"><a href="#cb38-11"></a>             <span class="at">resolution =</span> <span class="fl">10e03</span>,</span>
-<span id="cb38-12"><a href="#cb38-12"></a>             <span class="at">zrange =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">200</span>),</span>
+<span id="cb38-12"><a href="#cb38-12"></a>             <span class="at">zrange =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">275</span>),</span>
 <span id="cb38-13"><a href="#cb38-13"></a>             <span class="at">norm =</span> <span class="st">"SCALE"</span>,</span>
 <span id="cb38-14"><a href="#cb38-14"></a>             </span>
 <span id="cb38-15"><a href="#cb38-15"></a>             <span class="do">## Define reference point</span></span>
@@ -1577,39 +1680,40 @@ MergedGInteractions object with 5766 interactions and 1 metadata column:
 <span id="cb38-33"><a href="#cb38-33"></a>                <span class="at">params =</span> p,</span>
 <span id="cb38-34"><a href="#cb38-34"></a>                <span class="at">half =</span> <span class="st">"bottom"</span>)</span>
 <span id="cb38-35"><a href="#cb38-35"></a></span>
-<span id="cb38-36"><a href="#cb38-36"></a><span class="do">## Annotate TAD domains</span></span>
-<span id="cb38-37"><a href="#cb38-37"></a><span class="fu">annoDomains</span>(<span class="at">plot =</span> bottom,</span>
-<span id="cb38-38"><a href="#cb38-38"></a>            <span class="at">data =</span> deNovoTads,</span>
-<span id="cb38-39"><a href="#cb38-39"></a>            <span class="at">linecolor =</span> <span class="st">"red"</span>,</span>
-<span id="cb38-40"><a href="#cb38-40"></a>            <span class="at">params =</span> p)</span>
-<span id="cb38-41"><a href="#cb38-41"></a></span>
-<span id="cb38-42"><a href="#cb38-42"></a><span class="do">## Annotate heatmap legend</span></span>
-<span id="cb38-43"><a href="#cb38-43"></a><span class="fu">annoHeatmapLegend</span>(<span class="at">plot =</span> bottom,</span>
-<span id="cb38-44"><a href="#cb38-44"></a>                  <span class="at">params =</span> p,</span>
-<span id="cb38-45"><a href="#cb38-45"></a>                  <span class="at">orientation =</span> <span class="st">"v"</span>,</span>
-<span id="cb38-46"><a href="#cb38-46"></a>                  <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
-<span id="cb38-47"><a href="#cb38-47"></a>                  <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>width <span class="sc">+</span> p<span class="sc">$</span>space,</span>
-<span id="cb38-48"><a href="#cb38-48"></a>                  <span class="at">width =</span> p<span class="sc">$</span>space,</span>
-<span id="cb38-49"><a href="#cb38-49"></a>                  <span class="at">height =</span> p<span class="sc">$</span>height<span class="sc">*</span><span class="fl">0.5</span>)</span>
-<span id="cb38-50"><a href="#cb38-50"></a>    </span>
-<span id="cb38-51"><a href="#cb38-51"></a><span class="do">## Label genome</span></span>
-<span id="cb38-52"><a href="#cb38-52"></a><span class="fu">annoGenomeLabel</span>(<span class="at">plot =</span> bottom,</span>
-<span id="cb38-53"><a href="#cb38-53"></a>                <span class="at">params =</span> p,</span>
-<span id="cb38-54"><a href="#cb38-54"></a>                <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>height,</span>
-<span id="cb38-55"><a href="#cb38-55"></a>                <span class="at">scale =</span> <span class="st">"Mb"</span>)</span>
-<span id="cb38-56"><a href="#cb38-56"></a></span>
-<span id="cb38-57"><a href="#cb38-57"></a><span class="do">## Text annotations</span></span>
-<span id="cb38-58"><a href="#cb38-58"></a><span class="fu">plotText</span>(<span class="at">label =</span> <span class="fu">c</span>(<span class="st">"0 hrs"</span>, <span class="st">"72 hrs"</span>),</span>
-<span id="cb38-59"><a href="#cb38-59"></a>         <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
-<span id="cb38-60"><a href="#cb38-60"></a>         <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>space,</span>
-<span id="cb38-61"><a href="#cb38-61"></a>         <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>space,</span>
-<span id="cb38-62"><a href="#cb38-62"></a>         <span class="at">just =</span> <span class="fu">c</span>(<span class="st">'left'</span>, <span class="st">'top'</span>))</span>
-<span id="cb38-63"><a href="#cb38-63"></a></span>
-<span id="cb38-64"><a href="#cb38-64"></a><span class="fu">plotText</span>(<span class="at">label =</span> <span class="st">"72 hrs"</span>,</span>
-<span id="cb38-65"><a href="#cb38-65"></a>         <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
-<span id="cb38-66"><a href="#cb38-66"></a>         <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>width <span class="sc">-</span> p<span class="sc">$</span>space,</span>
-<span id="cb38-67"><a href="#cb38-67"></a>         <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>height <span class="sc">-</span> p<span class="sc">$</span>space,</span>
-<span id="cb38-68"><a href="#cb38-68"></a>         <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-36"><a href="#cb38-36"></a><span class="do">## Annotate loop pixels</span></span>
+<span id="cb38-37"><a href="#cb38-37"></a><span class="fu">annoPixels</span>(<span class="at">plot =</span> bottom,</span>
+<span id="cb38-38"><a href="#cb38-38"></a>           <span class="at">data =</span> deNovo,</span>
+<span id="cb38-39"><a href="#cb38-39"></a>           <span class="at">shift =</span> <span class="dv">3</span>,</span>
+<span id="cb38-40"><a href="#cb38-40"></a>           <span class="at">col =</span> <span class="st">'red'</span>,</span>
+<span id="cb38-41"><a href="#cb38-41"></a>           <span class="at">params =</span> p)</span>
+<span id="cb38-42"><a href="#cb38-42"></a></span>
+<span id="cb38-43"><a href="#cb38-43"></a><span class="do">## Annotate heatmap legend</span></span>
+<span id="cb38-44"><a href="#cb38-44"></a><span class="fu">annoHeatmapLegend</span>(<span class="at">plot =</span> bottom,</span>
+<span id="cb38-45"><a href="#cb38-45"></a>                  <span class="at">params =</span> p,</span>
+<span id="cb38-46"><a href="#cb38-46"></a>                  <span class="at">orientation =</span> <span class="st">"v"</span>,</span>
+<span id="cb38-47"><a href="#cb38-47"></a>                  <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
+<span id="cb38-48"><a href="#cb38-48"></a>                  <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>width <span class="sc">+</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-49"><a href="#cb38-49"></a>                  <span class="at">width =</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-50"><a href="#cb38-50"></a>                  <span class="at">height =</span> p<span class="sc">$</span>height<span class="sc">*</span><span class="fl">0.5</span>)</span>
+<span id="cb38-51"><a href="#cb38-51"></a>    </span>
+<span id="cb38-52"><a href="#cb38-52"></a><span class="do">## Label genome</span></span>
+<span id="cb38-53"><a href="#cb38-53"></a><span class="fu">annoGenomeLabel</span>(<span class="at">plot =</span> bottom,</span>
+<span id="cb38-54"><a href="#cb38-54"></a>                <span class="at">params =</span> p,</span>
+<span id="cb38-55"><a href="#cb38-55"></a>                <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>height,</span>
+<span id="cb38-56"><a href="#cb38-56"></a>                <span class="at">scale =</span> <span class="st">"bp"</span>)</span>
+<span id="cb38-57"><a href="#cb38-57"></a></span>
+<span id="cb38-58"><a href="#cb38-58"></a><span class="do">## Text annotations</span></span>
+<span id="cb38-59"><a href="#cb38-59"></a><span class="fu">plotText</span>(<span class="at">label =</span> <span class="fu">c</span>(<span class="st">"0 hrs"</span>, <span class="st">"72 hrs"</span>),</span>
+<span id="cb38-60"><a href="#cb38-60"></a>         <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
+<span id="cb38-61"><a href="#cb38-61"></a>         <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-62"><a href="#cb38-62"></a>         <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-63"><a href="#cb38-63"></a>         <span class="at">just =</span> <span class="fu">c</span>(<span class="st">'left'</span>, <span class="st">'top'</span>))</span>
+<span id="cb38-64"><a href="#cb38-64"></a></span>
+<span id="cb38-65"><a href="#cb38-65"></a><span class="fu">plotText</span>(<span class="at">label =</span> <span class="st">"72 hrs"</span>,</span>
+<span id="cb38-66"><a href="#cb38-66"></a>         <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
+<span id="cb38-67"><a href="#cb38-67"></a>         <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>width <span class="sc">-</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-68"><a href="#cb38-68"></a>         <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>height <span class="sc">-</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-69"><a href="#cb38-69"></a>         <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 </section><section id="visualize-with-plotgardener-output" class="slide level2 output-location-slide"><h2>Visualize with <code>plotgardener</code></h2><div class="cell output-location-slide">
