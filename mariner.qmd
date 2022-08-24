@@ -7,8 +7,7 @@ format:
     slide-number: true
     logo: images/bcb_logo.png
     footer: <https://github.com/EricSDavis/mariner>
-    execute:
-      freeze: auto
+    chalkboard: true
 editor: source
 bibliography: references.bib
 editor_options: 
@@ -657,7 +656,7 @@ giList <-
   })
 ```
 
-## Prepare the data
+## Prepare the data {.nonincremental}
 
 ```{r}
 #| echo: true
