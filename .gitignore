@@ -5,3 +5,4 @@
 .DS_Store
 
 mariner_files/*
+data/hic/*

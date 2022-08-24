@@ -1,8 +1,4 @@
 ---
-# title: "Mariner: Explore the Hi-Cs"
-# institute: "BCB Student Seminar"
-# author: "Eric Davis <br> Phanstiel Lab"
-# date: "09-01-2022"
 format:
   revealjs:
     incremental: true
@@ -11,12 +7,10 @@ format:
     slide-number: true
     logo: images/bcb_logo.png
     footer: <https://github.com/EricSDavis/mariner>
+    execute:
+      freeze: auto
 editor: source
 bibliography: references.bib
-# center-title-slide: false
-# title-slide-attributes:
-#   data-background-image: "images/mariner_no_text_cropped.png"
-#   data-background-opacity: "1"
 editor_options: 
   chunk_output_type: console
 ---
@@ -742,7 +736,34 @@ subsetBySource(x = mgi,
 
 ## Visualize with `plotgardener`
 
-
+<!-- # ```{r} -->
+<!-- # ## Load libraries -->
+<!-- # library(plotgardener) -->
+<!-- # -->
+<!-- # ## Define common params -->
+<!-- # p <- pgParams(assembly = "hg38", -->
+<!-- # -->
+<!-- #               ## Define region of interest -->
+<!-- #               chrom = "7", -->
+<!-- #               chromstart = 54490000, -->
+<!-- #               chromend = 56130000, -->
+<!-- #               resolution = 10e03, -->
+<!-- #               zrange = c(0, 150), -->
+<!-- # -->
+<!-- #               ## Define reference point -->
+<!-- #               x = 0.5, -->
+<!-- #               y = 0.5, -->
+<!-- #               width = 3, -->
+<!-- #               height = 3, -->
+<!-- #               length = 4) -->
+<!-- # -->
+<!-- # ## Initialize page -->
+<!-- # pageCreate(width = 4, height = 6, showGuides = FALSE) -->
+<!-- # -->
+<!-- # plotHicSquare(data = "../../../../projects/CHON/data/hic/CHON_HiC_C28_WT_NA_0_S_inter_30.hic", -->
+<!-- #               params = p) -->
+<!-- # -->
+<!-- # ``` -->
 
 # References {.center .middle}
 
