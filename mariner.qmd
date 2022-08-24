@@ -622,7 +622,7 @@ library(plyranges)
 
 ## List TAD files for each timepoint
 bedpeFiles <- 
-  list.files(path = "data/loops",
+  list.files(path = "data/tads",
              full.names = TRUE)
 
 ## Read in data
@@ -684,7 +684,7 @@ mgi
 ## Cluster and merge pairs
 mgi <- 
   mergePairs(x = giList,
-             radius = 10e05,
+             radius = 10e03,
              method = "manhattan")
 mgi
 ```
@@ -722,47 +722,118 @@ sources(mgi)
 ## Subsetting TADs by source
 subsetBySource(mgi)
 
-## De novo (must be in 6 & 72 but not in 0)
-subsetBySource(x = mgi,
-               include = c("360", "4320"),
-               exclude = "0")
-
 ## Transient TADs
 subsetBySource(x = mgi,
                include = "360",
                exclude = c("0", "4320"))
+
+## De novo (must be in 6 & 72 but not in 0)
+deNovo <-
+  subsetBySource(x = mgi,
+                 include = "4320",
+                 exclude = "0")
+deNovo
+```
+
+## Transform _de novo_ TADs for visualization
+
+```{r}
+#| echo: true
+#| code-line-numbers: true
+#| code-overflow: scroll
+
+## Assign to Hi-C bins
+deNovo <- 
+  binPairs(x = deNovo,
+           binSize = 10e03)
+
+## Reassemble TADs
+anchor1 <- anchors(deNovo, "first")
+anchor2 <- anchors(deNovo, "second")
+deNovoTads <- 
+  GRanges(seqnames = seqnames(anchor1),
+          ranges = IRanges(start = start(anchor1),
+                           end = end(anchor2)))
 ```
 
 ## Visualize with `plotgardener`
 
-<!-- # ```{r} -->
-<!-- # ## Load libraries -->
-<!-- # library(plotgardener) -->
-<!-- # -->
-<!-- # ## Define common params -->
-<!-- # p <- pgParams(assembly = "hg38", -->
-<!-- # -->
-<!-- #               ## Define region of interest -->
-<!-- #               chrom = "7", -->
-<!-- #               chromstart = 54490000, -->
-<!-- #               chromend = 56130000, -->
-<!-- #               resolution = 10e03, -->
-<!-- #               zrange = c(0, 150), -->
-<!-- # -->
-<!-- #               ## Define reference point -->
-<!-- #               x = 0.5, -->
-<!-- #               y = 0.5, -->
-<!-- #               width = 3, -->
-<!-- #               height = 3, -->
-<!-- #               length = 4) -->
-<!-- # -->
-<!-- # ## Initialize page -->
-<!-- # pageCreate(width = 4, height = 6, showGuides = FALSE) -->
-<!-- # -->
-<!-- # plotHicSquare(data = "../../../../projects/CHON/data/hic/CHON_HiC_C28_WT_NA_0_S_inter_30.hic", -->
-<!-- #               params = p) -->
-<!-- # -->
-<!-- # ``` -->
+```{r}
+#| echo: true
+#| code-line-numbers: true
+#| code-overflow: scroll
+#| output-location: slide
+
+## Load libraries
+library(plotgardener)
+
+## Define common params
+p <- pgParams(assembly = "hg38",
+              
+             ## Define region of interest
+             chrom = "7",
+             chromstart = 54490000,
+             chromend = 56130000,
+             resolution = 10e03,
+             zrange = c(0, 200),
+             norm = "SCALE",
+             
+             ## Define reference point
+             x = 0.5,
+             y = 0.5,
+             width = 3,
+             height = 3,
+             length = 3,
+             space = 0.1)
+
+## Initialize page
+pageCreate(width = 4, height = 4, showGuides = FALSE)
+
+## Hi-C plots
+top <- 
+  plotHicSquare(data = "data/hic/MEGA_K562_WT_0_inter.hic",
+                params = p,
+                half = "top")
+bottom <- 
+  plotHicSquare(data = "data/hic/MEGA_K562_WT_4320_inter.hic",
+                params = p,
+                half = "bottom")
+
+## Annotate TAD domains
+annoDomains(plot = bottom,
+            data = deNovoTads,
+            linecolor = "red",
+            params = p)
+
+## Annotate heatmap legend
+annoHeatmapLegend(plot = bottom,
+                  params = p,
+                  orientation = "v",
+                  fontcolor = "black",
+                  x = p$x + p$width + p$space,
+                  width = p$space,
+                  height = p$height*0.5)
+    
+## Label genome
+annoGenomeLabel(plot = bottom,
+                params = p,
+                y = p$y + p$height,
+                scale = "Mb")
+
+## Text annotations
+plotText(label = c("0 hrs", "72 hrs"),
+         fontcolor = "black",
+         x = p$x + p$space,
+         y = p$y + p$space,
+         just = c('left', 'top'))
+
+plotText(label = "72 hrs",
+         fontcolor = "black",
+         x = p$x + p$width - p$space,
+         y = p$y + p$height - p$space,
+         just = c("right", "bottom"))
+
+```
 
 # References {.center .middle}
 
