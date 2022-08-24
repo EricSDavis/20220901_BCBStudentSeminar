@@ -754,6 +754,7 @@ deNovoTads <-
   GRanges(seqnames = seqnames(anchor1),
           ranges = IRanges(start = start(anchor1),
                            end = end(anchor2)))
+head(deNovoTads)
 ```
 
 ## Visualize with `plotgardener`

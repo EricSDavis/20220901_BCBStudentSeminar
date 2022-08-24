@@ -1525,80 +1525,94 @@ MergedGInteractions object with 5766 interactions and 1 metadata column:
 <span id="cb36-9"><a href="#cb36-9"></a>deNovoTads <span class="ot">&lt;-</span> </span>
 <span id="cb36-10"><a href="#cb36-10"></a>  <span class="fu">GRanges</span>(<span class="at">seqnames =</span> <span class="fu">seqnames</span>(anchor1),</span>
 <span id="cb36-11"><a href="#cb36-11"></a>          <span class="at">ranges =</span> <span class="fu">IRanges</span>(<span class="at">start =</span> <span class="fu">start</span>(anchor1),</span>
-<span id="cb36-12"><a href="#cb36-12"></a>                           <span class="at">end =</span> <span class="fu">end</span>(anchor2)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-12"><a href="#cb36-12"></a>                           <span class="at">end =</span> <span class="fu">end</span>(anchor2)))</span>
+<span id="cb36-13"><a href="#cb36-13"></a><span class="fu">head</span>(deNovoTads)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GRanges object with 6 ranges and 0 metadata columns:
+      seqnames            ranges strand
+         &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt;
+  [1]        9 10030000-12550000      *
+  [2]        9 17520000-18900000      *
+  [3]        9 15770000-17490000      *
+  [4]        9 73200000-74680000      *
+  [5]        9 27720000-28080000      *
+  [6]        9   1040000-1880000      *
+  -------
+  seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
 </div>
 </section>
 <section id="visualize-with-plotgardener" class="slide level2">
 <h2>Visualize with <code>plotgardener</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="do">## Load libraries</span></span>
-<span id="cb37-2"><a href="#cb37-2"></a><span class="fu">library</span>(plotgardener)</span>
-<span id="cb37-3"><a href="#cb37-3"></a></span>
-<span id="cb37-4"><a href="#cb37-4"></a><span class="do">## Define common params</span></span>
-<span id="cb37-5"><a href="#cb37-5"></a>p <span class="ot">&lt;-</span> <span class="fu">pgParams</span>(<span class="at">assembly =</span> <span class="st">"hg38"</span>,</span>
-<span id="cb37-6"><a href="#cb37-6"></a>              </span>
-<span id="cb37-7"><a href="#cb37-7"></a>             <span class="do">## Define region of interest</span></span>
-<span id="cb37-8"><a href="#cb37-8"></a>             <span class="at">chrom =</span> <span class="st">"7"</span>,</span>
-<span id="cb37-9"><a href="#cb37-9"></a>             <span class="at">chromstart =</span> <span class="dv">54490000</span>,</span>
-<span id="cb37-10"><a href="#cb37-10"></a>             <span class="at">chromend =</span> <span class="dv">56130000</span>,</span>
-<span id="cb37-11"><a href="#cb37-11"></a>             <span class="at">resolution =</span> <span class="fl">10e03</span>,</span>
-<span id="cb37-12"><a href="#cb37-12"></a>             <span class="at">zrange =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">200</span>),</span>
-<span id="cb37-13"><a href="#cb37-13"></a>             <span class="at">norm =</span> <span class="st">"SCALE"</span>,</span>
-<span id="cb37-14"><a href="#cb37-14"></a>             </span>
-<span id="cb37-15"><a href="#cb37-15"></a>             <span class="do">## Define reference point</span></span>
-<span id="cb37-16"><a href="#cb37-16"></a>             <span class="at">x =</span> <span class="fl">0.5</span>,</span>
-<span id="cb37-17"><a href="#cb37-17"></a>             <span class="at">y =</span> <span class="fl">0.5</span>,</span>
-<span id="cb37-18"><a href="#cb37-18"></a>             <span class="at">width =</span> <span class="dv">3</span>,</span>
-<span id="cb37-19"><a href="#cb37-19"></a>             <span class="at">height =</span> <span class="dv">3</span>,</span>
-<span id="cb37-20"><a href="#cb37-20"></a>             <span class="at">length =</span> <span class="dv">3</span>,</span>
-<span id="cb37-21"><a href="#cb37-21"></a>             <span class="at">space =</span> <span class="fl">0.1</span>)</span>
-<span id="cb37-22"><a href="#cb37-22"></a></span>
-<span id="cb37-23"><a href="#cb37-23"></a><span class="do">## Initialize page</span></span>
-<span id="cb37-24"><a href="#cb37-24"></a><span class="fu">pageCreate</span>(<span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">4</span>, <span class="at">showGuides =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb37-25"><a href="#cb37-25"></a></span>
-<span id="cb37-26"><a href="#cb37-26"></a><span class="do">## Hi-C plots</span></span>
-<span id="cb37-27"><a href="#cb37-27"></a>top <span class="ot">&lt;-</span> </span>
-<span id="cb37-28"><a href="#cb37-28"></a>  <span class="fu">plotHicSquare</span>(<span class="at">data =</span> <span class="st">"data/hic/MEGA_K562_WT_0_inter.hic"</span>,</span>
-<span id="cb37-29"><a href="#cb37-29"></a>                <span class="at">params =</span> p,</span>
-<span id="cb37-30"><a href="#cb37-30"></a>                <span class="at">half =</span> <span class="st">"top"</span>)</span>
-<span id="cb37-31"><a href="#cb37-31"></a>bottom <span class="ot">&lt;-</span> </span>
-<span id="cb37-32"><a href="#cb37-32"></a>  <span class="fu">plotHicSquare</span>(<span class="at">data =</span> <span class="st">"data/hic/MEGA_K562_WT_4320_inter.hic"</span>,</span>
-<span id="cb37-33"><a href="#cb37-33"></a>                <span class="at">params =</span> p,</span>
-<span id="cb37-34"><a href="#cb37-34"></a>                <span class="at">half =</span> <span class="st">"bottom"</span>)</span>
-<span id="cb37-35"><a href="#cb37-35"></a></span>
-<span id="cb37-36"><a href="#cb37-36"></a><span class="do">## Annotate TAD domains</span></span>
-<span id="cb37-37"><a href="#cb37-37"></a><span class="fu">annoDomains</span>(<span class="at">plot =</span> bottom,</span>
-<span id="cb37-38"><a href="#cb37-38"></a>            <span class="at">data =</span> deNovoTads,</span>
-<span id="cb37-39"><a href="#cb37-39"></a>            <span class="at">linecolor =</span> <span class="st">"red"</span>,</span>
-<span id="cb37-40"><a href="#cb37-40"></a>            <span class="at">params =</span> p)</span>
-<span id="cb37-41"><a href="#cb37-41"></a></span>
-<span id="cb37-42"><a href="#cb37-42"></a><span class="do">## Annotate heatmap legend</span></span>
-<span id="cb37-43"><a href="#cb37-43"></a><span class="fu">annoHeatmapLegend</span>(<span class="at">plot =</span> bottom,</span>
-<span id="cb37-44"><a href="#cb37-44"></a>                  <span class="at">params =</span> p,</span>
-<span id="cb37-45"><a href="#cb37-45"></a>                  <span class="at">orientation =</span> <span class="st">"v"</span>,</span>
-<span id="cb37-46"><a href="#cb37-46"></a>                  <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
-<span id="cb37-47"><a href="#cb37-47"></a>                  <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>width <span class="sc">+</span> p<span class="sc">$</span>space,</span>
-<span id="cb37-48"><a href="#cb37-48"></a>                  <span class="at">width =</span> p<span class="sc">$</span>space,</span>
-<span id="cb37-49"><a href="#cb37-49"></a>                  <span class="at">height =</span> p<span class="sc">$</span>height<span class="sc">*</span><span class="fl">0.5</span>)</span>
-<span id="cb37-50"><a href="#cb37-50"></a>    </span>
-<span id="cb37-51"><a href="#cb37-51"></a><span class="do">## Label genome</span></span>
-<span id="cb37-52"><a href="#cb37-52"></a><span class="fu">annoGenomeLabel</span>(<span class="at">plot =</span> bottom,</span>
-<span id="cb37-53"><a href="#cb37-53"></a>                <span class="at">params =</span> p,</span>
-<span id="cb37-54"><a href="#cb37-54"></a>                <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>height,</span>
-<span id="cb37-55"><a href="#cb37-55"></a>                <span class="at">scale =</span> <span class="st">"Mb"</span>)</span>
-<span id="cb37-56"><a href="#cb37-56"></a></span>
-<span id="cb37-57"><a href="#cb37-57"></a><span class="do">## Text annotations</span></span>
-<span id="cb37-58"><a href="#cb37-58"></a><span class="fu">plotText</span>(<span class="at">label =</span> <span class="fu">c</span>(<span class="st">"0 hrs"</span>, <span class="st">"72 hrs"</span>),</span>
-<span id="cb37-59"><a href="#cb37-59"></a>         <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
-<span id="cb37-60"><a href="#cb37-60"></a>         <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>space,</span>
-<span id="cb37-61"><a href="#cb37-61"></a>         <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>space,</span>
-<span id="cb37-62"><a href="#cb37-62"></a>         <span class="at">just =</span> <span class="fu">c</span>(<span class="st">'left'</span>, <span class="st">'top'</span>))</span>
-<span id="cb37-63"><a href="#cb37-63"></a></span>
-<span id="cb37-64"><a href="#cb37-64"></a><span class="fu">plotText</span>(<span class="at">label =</span> <span class="st">"72 hrs"</span>,</span>
-<span id="cb37-65"><a href="#cb37-65"></a>         <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
-<span id="cb37-66"><a href="#cb37-66"></a>         <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>width <span class="sc">-</span> p<span class="sc">$</span>space,</span>
-<span id="cb37-67"><a href="#cb37-67"></a>         <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>height <span class="sc">-</span> p<span class="sc">$</span>space,</span>
-<span id="cb37-68"><a href="#cb37-68"></a>         <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38" data-code-line-numbers="true"><pre class="sourceCode numberSource r code-overflow-scroll number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="do">## Load libraries</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="fu">library</span>(plotgardener)</span>
+<span id="cb38-3"><a href="#cb38-3"></a></span>
+<span id="cb38-4"><a href="#cb38-4"></a><span class="do">## Define common params</span></span>
+<span id="cb38-5"><a href="#cb38-5"></a>p <span class="ot">&lt;-</span> <span class="fu">pgParams</span>(<span class="at">assembly =</span> <span class="st">"hg38"</span>,</span>
+<span id="cb38-6"><a href="#cb38-6"></a>              </span>
+<span id="cb38-7"><a href="#cb38-7"></a>             <span class="do">## Define region of interest</span></span>
+<span id="cb38-8"><a href="#cb38-8"></a>             <span class="at">chrom =</span> <span class="st">"7"</span>,</span>
+<span id="cb38-9"><a href="#cb38-9"></a>             <span class="at">chromstart =</span> <span class="dv">54490000</span>,</span>
+<span id="cb38-10"><a href="#cb38-10"></a>             <span class="at">chromend =</span> <span class="dv">56130000</span>,</span>
+<span id="cb38-11"><a href="#cb38-11"></a>             <span class="at">resolution =</span> <span class="fl">10e03</span>,</span>
+<span id="cb38-12"><a href="#cb38-12"></a>             <span class="at">zrange =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">200</span>),</span>
+<span id="cb38-13"><a href="#cb38-13"></a>             <span class="at">norm =</span> <span class="st">"SCALE"</span>,</span>
+<span id="cb38-14"><a href="#cb38-14"></a>             </span>
+<span id="cb38-15"><a href="#cb38-15"></a>             <span class="do">## Define reference point</span></span>
+<span id="cb38-16"><a href="#cb38-16"></a>             <span class="at">x =</span> <span class="fl">0.5</span>,</span>
+<span id="cb38-17"><a href="#cb38-17"></a>             <span class="at">y =</span> <span class="fl">0.5</span>,</span>
+<span id="cb38-18"><a href="#cb38-18"></a>             <span class="at">width =</span> <span class="dv">3</span>,</span>
+<span id="cb38-19"><a href="#cb38-19"></a>             <span class="at">height =</span> <span class="dv">3</span>,</span>
+<span id="cb38-20"><a href="#cb38-20"></a>             <span class="at">length =</span> <span class="dv">3</span>,</span>
+<span id="cb38-21"><a href="#cb38-21"></a>             <span class="at">space =</span> <span class="fl">0.1</span>)</span>
+<span id="cb38-22"><a href="#cb38-22"></a></span>
+<span id="cb38-23"><a href="#cb38-23"></a><span class="do">## Initialize page</span></span>
+<span id="cb38-24"><a href="#cb38-24"></a><span class="fu">pageCreate</span>(<span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">4</span>, <span class="at">showGuides =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb38-25"><a href="#cb38-25"></a></span>
+<span id="cb38-26"><a href="#cb38-26"></a><span class="do">## Hi-C plots</span></span>
+<span id="cb38-27"><a href="#cb38-27"></a>top <span class="ot">&lt;-</span> </span>
+<span id="cb38-28"><a href="#cb38-28"></a>  <span class="fu">plotHicSquare</span>(<span class="at">data =</span> <span class="st">"data/hic/MEGA_K562_WT_0_inter.hic"</span>,</span>
+<span id="cb38-29"><a href="#cb38-29"></a>                <span class="at">params =</span> p,</span>
+<span id="cb38-30"><a href="#cb38-30"></a>                <span class="at">half =</span> <span class="st">"top"</span>)</span>
+<span id="cb38-31"><a href="#cb38-31"></a>bottom <span class="ot">&lt;-</span> </span>
+<span id="cb38-32"><a href="#cb38-32"></a>  <span class="fu">plotHicSquare</span>(<span class="at">data =</span> <span class="st">"data/hic/MEGA_K562_WT_4320_inter.hic"</span>,</span>
+<span id="cb38-33"><a href="#cb38-33"></a>                <span class="at">params =</span> p,</span>
+<span id="cb38-34"><a href="#cb38-34"></a>                <span class="at">half =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb38-35"><a href="#cb38-35"></a></span>
+<span id="cb38-36"><a href="#cb38-36"></a><span class="do">## Annotate TAD domains</span></span>
+<span id="cb38-37"><a href="#cb38-37"></a><span class="fu">annoDomains</span>(<span class="at">plot =</span> bottom,</span>
+<span id="cb38-38"><a href="#cb38-38"></a>            <span class="at">data =</span> deNovoTads,</span>
+<span id="cb38-39"><a href="#cb38-39"></a>            <span class="at">linecolor =</span> <span class="st">"red"</span>,</span>
+<span id="cb38-40"><a href="#cb38-40"></a>            <span class="at">params =</span> p)</span>
+<span id="cb38-41"><a href="#cb38-41"></a></span>
+<span id="cb38-42"><a href="#cb38-42"></a><span class="do">## Annotate heatmap legend</span></span>
+<span id="cb38-43"><a href="#cb38-43"></a><span class="fu">annoHeatmapLegend</span>(<span class="at">plot =</span> bottom,</span>
+<span id="cb38-44"><a href="#cb38-44"></a>                  <span class="at">params =</span> p,</span>
+<span id="cb38-45"><a href="#cb38-45"></a>                  <span class="at">orientation =</span> <span class="st">"v"</span>,</span>
+<span id="cb38-46"><a href="#cb38-46"></a>                  <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
+<span id="cb38-47"><a href="#cb38-47"></a>                  <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>width <span class="sc">+</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-48"><a href="#cb38-48"></a>                  <span class="at">width =</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-49"><a href="#cb38-49"></a>                  <span class="at">height =</span> p<span class="sc">$</span>height<span class="sc">*</span><span class="fl">0.5</span>)</span>
+<span id="cb38-50"><a href="#cb38-50"></a>    </span>
+<span id="cb38-51"><a href="#cb38-51"></a><span class="do">## Label genome</span></span>
+<span id="cb38-52"><a href="#cb38-52"></a><span class="fu">annoGenomeLabel</span>(<span class="at">plot =</span> bottom,</span>
+<span id="cb38-53"><a href="#cb38-53"></a>                <span class="at">params =</span> p,</span>
+<span id="cb38-54"><a href="#cb38-54"></a>                <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>height,</span>
+<span id="cb38-55"><a href="#cb38-55"></a>                <span class="at">scale =</span> <span class="st">"Mb"</span>)</span>
+<span id="cb38-56"><a href="#cb38-56"></a></span>
+<span id="cb38-57"><a href="#cb38-57"></a><span class="do">## Text annotations</span></span>
+<span id="cb38-58"><a href="#cb38-58"></a><span class="fu">plotText</span>(<span class="at">label =</span> <span class="fu">c</span>(<span class="st">"0 hrs"</span>, <span class="st">"72 hrs"</span>),</span>
+<span id="cb38-59"><a href="#cb38-59"></a>         <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
+<span id="cb38-60"><a href="#cb38-60"></a>         <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-61"><a href="#cb38-61"></a>         <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-62"><a href="#cb38-62"></a>         <span class="at">just =</span> <span class="fu">c</span>(<span class="st">'left'</span>, <span class="st">'top'</span>))</span>
+<span id="cb38-63"><a href="#cb38-63"></a></span>
+<span id="cb38-64"><a href="#cb38-64"></a><span class="fu">plotText</span>(<span class="at">label =</span> <span class="st">"72 hrs"</span>,</span>
+<span id="cb38-65"><a href="#cb38-65"></a>         <span class="at">fontcolor =</span> <span class="st">"black"</span>,</span>
+<span id="cb38-66"><a href="#cb38-66"></a>         <span class="at">x =</span> p<span class="sc">$</span>x <span class="sc">+</span> p<span class="sc">$</span>width <span class="sc">-</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-67"><a href="#cb38-67"></a>         <span class="at">y =</span> p<span class="sc">$</span>y <span class="sc">+</span> p<span class="sc">$</span>height <span class="sc">-</span> p<span class="sc">$</span>space,</span>
+<span id="cb38-68"><a href="#cb38-68"></a>         <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 </section><section id="visualize-with-plotgardener-output" class="slide level2 output-location-slide"><h2>Visualize with <code>plotgardener</code></h2><div class="cell output-location-slide">
