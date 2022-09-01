@@ -812,3 +812,8 @@ plotText(label = "72 hrs",
 ## References
 ::: {#refs}
 :::
+
+## Acknowledgements
+
+![](images/acknowledgements.png)
+

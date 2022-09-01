@@ -476,6 +476,16 @@
       "Hash": "36b67b5adf57b292923f5659f5f0c853",
       "Requirements": []
     },
+    "dbscan": {
+      "Package": "dbscan",
+      "Version": "1.1-10",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a41eed892d408fda44afe96f7df2885e",
+      "Requirements": [
+        "Rcpp"
+      ]
+    },
     "digest": {
       "Package": "digest",
       "Version": "0.6.29",
@@ -653,6 +663,20 @@
         "xfun"
       ]
     },
+    "hms": {
+      "Package": "hms",
+      "Version": "1.1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5b8a2dd0fdbe2ab4f6081e6c7be6dfca",
+      "Requirements": [
+        "ellipsis",
+        "lifecycle",
+        "pkgconfig",
+        "rlang",
+        "vctrs"
+      ]
+    },
     "htmltools": {
       "Package": "htmltools",
       "Version": "0.5.3",
@@ -754,16 +778,25 @@
     "mariner": {
       "Package": "mariner",
       "Version": "0.1.0",
-      "Source": "Bioconductor",
-      "Hash": "73b1926ecdf2ee9b60a5fa7365ecb76b",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "mariner",
+      "RemoteUsername": "EricSDavis",
+      "RemoteRef": "0.1.0",
+      "RemoteSha": "60eb15acd17df50eb49dfd1ba244520c87a6a5d5",
+      "Hash": "8146b6b36c35c4420d8a5cfc643b5879",
       "Requirements": [
         "GenomicRanges",
         "InteractionSet",
         "S4Vectors",
         "data.table",
+        "dbscan",
         "glue",
         "magrittr",
         "plyranges",
+        "progress",
+        "purrr",
         "rlang"
       ]
     },
@@ -886,6 +919,27 @@
         "rlang",
         "rtracklayer",
         "tidyselect"
+      ]
+    },
+    "prettyunits": {
+      "Package": "prettyunits",
+      "Version": "1.1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "95ef9167b75dde9d2ccc3c7528393e7e",
+      "Requirements": []
+    },
+    "progress": {
+      "Package": "progress",
+      "Version": "1.2.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "14dc9f7a3c91ebb14ec5bb9208a07061",
+      "Requirements": [
+        "R6",
+        "crayon",
+        "hms",
+        "prettyunits"
       ]
     },
     "purrr": {
@@ -1038,9 +1092,9 @@
       "RemoteRepo": "straw",
       "RemoteUsername": "EricSDavis",
       "RemoteRef": "HEAD",
-      "RemoteSha": "f3b0bdd6ffd1d3999d45cb507519125ceaea4427",
+      "RemoteSha": "b57a3a6a97b959e959104be955605cbe74eda1cc",
       "RemoteSubdir": "R",
-      "Hash": "5838d057407c4062d41c971e3ab10f7e",
+      "Hash": "26b863b4e2c7ff576cb72a88420ce7d1",
       "Requirements": [
         "Rcpp"
       ]
